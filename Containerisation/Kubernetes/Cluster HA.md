@@ -1,0 +1,1 @@
+https://kubernetes.io/docs/setup/independent/high-availability/
