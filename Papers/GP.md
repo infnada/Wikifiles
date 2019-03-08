@@ -1,3 +1,11 @@
+---
+title: GP
+description: 
+published: true
+date: 2019-03-08T19:46:12.128Z
+tags: 
+---
+
 Al llegar a Grupo Pacífico me encontré con una empresa familiar que había crecido de forma muy acelerada, pero en cierta medida desorganizada y carente en criterios técnicos. Ya fuere por desconocimiento o falta de tiempo/personal.
 
 En los últimos años anteriores a mí, se habían realizado muchas mejoras, pero estas seguían siendo insuficientes.
@@ -14,13 +22,12 @@ La teoría para asegurar disponibilidad de servicio estaba muy bien, teníamos 2
 
 Supongamos que tenemos una parada de tiempo indeterminado al CPD principal:
 
--	Las Dibas de cada CPD tienen IPs publicas diferentes, sumado a que tenemos 1K-2K entradas DNS y que éstas apuntan directamente a las IPs públicas en vez de a un alias… Deberíamos de modificar todas esas entradas para que atacasen a las nuevas IPs públicas.
-o	Era eso, o pedir que Telefonica publicara las IPs públicas de la Diba del CPD principal a la Diba del CPD secundario. Telefonica te da un mínimo de 48 horas para realizar este cambio.
--	Cómo ya he mencionado, todos los servidores están en la misma red que los usuarios. Al tener una conexión por L3 se hubiera tenido que modificar todas las IPs internas de los servidores para ser compatibles con el segmento de red del CPD secundario. Hay que tener en cuenta que no es sólo modificar la IP de los nodos, cada servicio (IIS, Apache…) depende de otros servicios (SQL, MariaDB, SMTP, etc, etc, etc). Lo cual comportaría modificar el 100% de servicios para configurarlos con el nuevo rango de red.
+- Las Dibas de cada CPD tienen IPs publicas diferentes, sumado a que tenemos 1K-2K entradas DNS y que éstas apuntan directamente a las IPs públicas en vez de a un alias… Deberíamos de modificar todas esas entradas para que atacasen a las nuevas IPs públicas.
+	- Era eso, o pedir que Telefonica publicara las IPs públicas de la Diba del CPD principal a la Diba del CPD secundario. Telefonica te da un mínimo de 48 horas para realizar este cambio.
+- Cómo ya he mencionado, todos los servidores están en la misma red que los usuarios. Al tener una conexión por L3 se hubiera tenido que modificar todas las IPs internas de los servidores para ser compatibles con el segmento de red del CPD secundario. Hay que tener en cuenta que no es sólo modificar la IP de los nodos, cada servicio (IIS, Apache…) depende de otros servicios (SQL, MariaDB, SMTP, etc, etc, etc). Lo cual comportaría modificar el 100% de servicios para configurarlos con el nuevo rango de red.
 -	Recrear entradas NAT…
-
+---
 -	¿Sabemos cuánto durara esta parada?
-
 -	Y posteriormente, ¿cómo hacemos un rollback?
 
 Bien, aprovechando el aprovisionamiento de servidores nuevos (WServer 2012R2, 2016, Centos 7) mencionado al inicio, éstos ya se implementaron con un mínimo de ‘hardering’ y segmentados en 2 nuevas redes, DMZ e Internal.
