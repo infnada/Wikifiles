@@ -2,7 +2,7 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:25:42.747Z
+date: 2019-03-08T20:26:04.019Z
 tags: 
 ---
 
@@ -51,3 +51,22 @@ $ vi debian-install-apache2.yaml
 ```
 
 `$ ansible-playbook -l debian debian-install-apache2.yaml`
+
+## Ejemplos de Playbooks
+
+- Package updates
+```
+- hosts: all
+  #serial: 10
+  tasks:
+    - name: Upgrade Debian-Family
+      apt: upgrade=yes update_cache=yes
+      when: ansible_os_family == 'Debian'
+      become: yes
+      
+    - name: Upgrade Centos-Family
+      yum: name='*' update_only=yes update_cache=yes
+      when: ansible_os_family == 'RedHat'
+      become: yes
+```
+
