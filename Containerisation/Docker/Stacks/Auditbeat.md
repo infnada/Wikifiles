@@ -2,7 +2,7 @@
 title: Auditbeat
 description: 
 published: true
-date: 2019-03-08T22:56:36.129Z
+date: 2019-03-08T22:57:31.961Z
 tags: 
 ---
 
@@ -17,7 +17,7 @@ services:
   auditbeat:
     image: docker.elastic.co/beats/auditbeat:6.6.0
     # https://github.com/docker/swarmkit/issues/1951
-    hostname: "{{.Node.Hostname}}-auditbeat"
+    hostname: "&#123;&#123;.Node.Hostname}}-auditbeat"
     # Need to override user so we can access the log files, and docker.sock
     user: root
     # https://www.elastic.co/guide/en/beats/auditbeat/current/running-on-docker.html#_special_requirements
