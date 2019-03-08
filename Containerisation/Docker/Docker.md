@@ -2,7 +2,7 @@
 title: Docker
 description: 
 published: true
-date: 2019-03-08T19:22:34.357Z
+date: 2019-03-08T20:39:26.800Z
 tags: 
 ---
 
@@ -41,7 +41,6 @@ $ sudo sh get-docker.sh
 `$ usermod -aG docker your-user`
 
 - Configurar logs
-
     - Por defecto Docker loguea el output de los contenedores en archivos en formato JSON. En algunos casos puede que estos archivos incrementen muchíssimo su tamaño.
     - Debido a que se utilizan concentradores de logs (Elasticsearch, influxDB, Prometheus...), aconsejo bajar al "mínimo" el tamaño disponible para los logs locales en los nodos.
     - Esta opción tambien se puede configurar a nivel de servicio.
@@ -153,10 +152,9 @@ $ docker cp ruta_local nombre_container:/ruta_container
 - Es mucho más facil administrar volumenes, y sus datos, atacando directamente a cabina con NFS o crear tu propio HA NFS Active/Pasive.
 - Ultima actualización del plugin (Github) hace casi 1 año.
 ---
+
 - Este plugin te permite crear volumenes en Datastores de vSphere y montarlos en los nodos de Docker sobre ESXi.
 - Cada volumen solo se puede montar sobre un unico nodo de Docker
-
-
 - En este caso utilizamos el parámetro `"VDVS_SOCKET_GID=233"` donde `233` es el `gid` del grupo `docker` para CoreOS
 
 `$ docker plugin install --grant-all-permissions --alias vsphere vmware/vsphere-storage-for-docker:latest "VDVS_SOCKET_GID=233"`
@@ -221,6 +219,7 @@ $ docker volume create --driver=vfile --name=nombre_volumen_compartido -o size=1
 ## Creación de redes
 
 - Red simple 
+
 `$ docker network create --attachable nombre_red`
 
 - Utilización del driver Overlay
