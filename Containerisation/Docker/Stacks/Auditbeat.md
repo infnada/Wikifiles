@@ -2,9 +2,11 @@
 title: Auditbeat
 description: 
 published: true
-date: 2019-03-08T22:57:31.961Z
+date: 2019-03-08T22:58:04.218Z
 tags: 
 ---
+
+> Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
 ```
 version: "3.6"
