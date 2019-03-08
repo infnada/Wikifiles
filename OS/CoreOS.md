@@ -1,3 +1,11 @@
+---
+title: CoreOS
+description: 
+published: true
+date: 2019-03-08T18:14:52.341Z
+tags: 
+---
+
 # Instalación estándard de CoreOS para Docker
 
 ## Configurar inition.json
