@@ -1,3 +1,11 @@
+---
+title: Centos 7 hardering
+description: 
+published: true
+date: 2019-03-08T18:11:14.505Z
+tags: 
+---
+
 #Hardering Centos 7 minimal
 
 ##Particionado de disco
