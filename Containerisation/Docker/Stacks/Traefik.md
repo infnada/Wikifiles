@@ -2,9 +2,11 @@
 title: Traefik
 description: 
 published: true
-date: 2019-03-08T22:50:56.198Z
+date: 2019-03-08T23:04:08.637Z
 tags: 
 ---
+
+> Mejor utilizar `ports` en modo `host`
 
 ```
 version: "3.4"
