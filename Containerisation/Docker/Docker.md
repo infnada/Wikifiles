@@ -2,15 +2,7 @@
 title: Docker
 description: 
 published: true
-date: 2019-03-08T18:07:18.726Z
-tags: 
----
-
----
-title: Docker
-description: 
-published: true
-date: 2019-03-08T14:47:01.981Z
+date: 2019-03-08T18:12:42.186Z
 tags: 
 ---
 
