@@ -2,7 +2,7 @@
 title: GP
 description: 
 published: true
-date: 2019-03-08T19:46:12.128Z
+date: 2019-03-08T20:53:56.138Z
 tags: 
 ---
 
@@ -48,9 +48,12 @@ Para interconectar las sedes y los CPDs se decidió utilizar DMPV sobre tecnolog
 
 El esquema sería algo así:
  
+![alt text](https://www.isartnavarro.io/img/GP-basic.jpg =1024x)
+
 
 O siendo más específicos:
  
+![alt text](https://www.isartnavarro.io/img/GP-adv.png =1024x)
 
 A partir de ahí, conectamos todo el entorno ESXi principal a 10G usando 10GBase-SR (LC).
 -	Firewall perimetral
