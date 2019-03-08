@@ -2,11 +2,11 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:31:26.321Z
+date: 2019-03-08T20:31:34.827Z
 tags: 
 ---
 
-> Reemplazar `&#123;` por `{` .... ya que sino no me renderiza correctamente este HTML
+> Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
 > https://www.ansible.com/
 
