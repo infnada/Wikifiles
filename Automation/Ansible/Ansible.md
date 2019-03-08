@@ -2,7 +2,7 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:28:14.802Z
+date: 2019-03-08T20:28:37.540Z
 tags: 
 ---
 
@@ -200,8 +200,8 @@ dependencies: []
 -----
 
 dependencies:
-  - &#123; role: base-system }
-  - &#123; role: otro-rol }
+  - { role: base-system }
+  - { role: otro-rol }
 ```
 - tasks/main.yaml:
 ...
