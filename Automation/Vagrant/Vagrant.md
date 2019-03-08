@@ -2,7 +2,7 @@
 title: Vagrant
 description: 
 published: true
-date: 2019-03-08T18:06:54.805Z
+date: 2019-03-08T19:20:30.137Z
 tags: 
 ---
 
