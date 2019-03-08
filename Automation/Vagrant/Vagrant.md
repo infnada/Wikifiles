@@ -2,7 +2,7 @@
 title: Vagrant
 description: 
 published: true
-date: 2019-03-08T20:07:55.549Z
+date: 2019-03-08T20:12:32.403Z
 tags: 
 ---
 
@@ -28,6 +28,10 @@ Recursos:
 - Ver listado de VMs activas
 
 `$ vagrant box list`
+
+- Ver puertos de una VM
+
+`$ vagrant port $boxname`
 
 - Interactuar con VMs
 
