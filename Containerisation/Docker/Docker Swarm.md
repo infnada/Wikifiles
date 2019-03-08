@@ -2,10 +2,9 @@
 title: Docker Swarm
 description: 
 published: true
-date: 2019-03-08T18:30:37.543Z
+date: 2019-03-08T19:23:17.301Z
 tags: 
 ---
-
 
 > https://docs.docker.com/engine/swarm/
 
@@ -57,32 +56,6 @@ tags:
 
 `$ docker node ls`
 
-## Stack
-
-- Lanzar stack
+# Stack
 
 `$ docker stack deploy -c archivo.yaml nombre_stack`
-
-- Listar los stacks
-
-`$ docker stack ls`
-
-- Listar los servicios
-
-`$ docker service ls`
-
-- Recargar servicio
-
-`$ docker service update nombre_servicio`
-
-- Escalar servicio
-
-`$ docker service scale nombre_servicio=numero_replicas
-
-
-# Stacks interesantes
-
-- Portainer
-- Swarmpit
-- Consul
-- Traefik
