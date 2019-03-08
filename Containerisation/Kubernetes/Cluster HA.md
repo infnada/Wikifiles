@@ -1,1 +1,11 @@
-https://kubernetes.io/docs/setup/independent/high-availability/
+---
+title: Cluster HA
+description: 
+published: true
+date: 2019-03-08T18:08:55.216Z
+tags: 
+---
+
+# Header
+
+Your content here
