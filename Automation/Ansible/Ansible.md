@@ -2,9 +2,11 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:29:30.675Z
+date: 2019-03-08T20:31:26.321Z
 tags: 
 ---
+
+> Reemplazar `&#123;` por `{` .... ya que sino no me renderiza correctamente este HTML
 
 > https://www.ansible.com/
 
