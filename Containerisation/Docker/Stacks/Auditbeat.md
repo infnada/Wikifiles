@@ -2,7 +2,7 @@
 title: Auditbeat
 description: 
 published: true
-date: 2019-03-08T22:58:04.218Z
+date: 2019-03-08T23:19:07.788Z
 tags: 
 ---
 
@@ -40,8 +40,8 @@ services:
       - auditbeat:/usr/share/auditbeat/data
       - /var/log:/var/log:ro
     environment:
-      - ELASTICSEARCH_HOST=https://elasticsearch.gp.local # Set you elastic domain
-      - KIBANA_HOST=https://kibana.gp.local # Set you kibana domain
+      - ELASTICSEARCH_HOST=https://elasticsearch.gp.local # Set your elastic domain
+      - KIBANA_HOST=https://kibana.gp.local # Set your kibana domain
       - ELASTICSEARCH_USERNAME=YOUR_ELASTIC_USERNAME
       - ELASTICSEARCH_PASSWORD=YOUR_ELASTIC_PASSWORD
     command: ["--strict.perms=false"]
@@ -106,7 +106,7 @@ processors:
 
 #========================== Elasticsearch output ===============================
 output.elasticsearch:
-  hosts: ["https://elasticsearch.gp.local:443"] # Set you elasticsearch domain
+  hosts: ["https://elasticsearch.gp.local:443"] # Set your elasticsearch domain
   username: YOUR_ELASTIC_USERNAME
   password: YOUR_ELASTIC_PASSWORD
   ssl:
@@ -118,7 +118,7 @@ setup.dashboards:
 
 #============================== Kibana =========================================
 setup.kibana:
-  host: "https://kibana.gp.local:443" # Set you kibana domain
+  host: "https://kibana.gp.local:443" # Set your kibana domain
   username: YOUR_ELASTIC_USERNAME
   password: YOUR_ELASTIC_PASSWORD
   ssl:
