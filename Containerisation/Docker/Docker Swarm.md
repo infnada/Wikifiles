@@ -2,9 +2,10 @@
 title: Docker Swarm
 description: 
 published: true
-date: 2019-03-08T15:01:29.599Z
+date: 2019-03-08T18:08:16.889Z
 tags: 
 ---
+
 
 > https://docs.docker.com/engine/swarm/
 
