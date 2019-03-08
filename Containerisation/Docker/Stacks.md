@@ -2,13 +2,16 @@
 title: Stacks
 description: 
 published: true
-date: 2019-03-08T23:01:38.694Z
+date: 2019-03-08T23:02:35.867Z
 tags: 
 ---
 
 > La mayoría de estos ejemplos utilizan volumenes por NFS y Traefik. Al mismo tiempo pueden contener constraints específicos para mis pruebas.
 
 # Networks used
+
+> Para un buen aislamiento, cada servicio debería conectar con Traefik desde una red diferente. En este caso siempre utilizamos `net_internal_web_gateway`
+
 ```
 docker network create -d overlay --attachable net_postgres
 docker network create -d overlay --attachable net_redis  
