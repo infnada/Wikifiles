@@ -2,7 +2,7 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:26:24.016Z
+date: 2019-03-08T20:26:37.010Z
 tags: 
 ---
 
@@ -109,44 +109,4 @@ $ vi debian-install-apache2.yaml
 
 > Hay que crear el directorio `files` en local para copiar las claves ssh
 
-```
-- hosts: "all"
-  #sudo: true
-  vars:
-    users:
-    - "operador1"
-    - "operador2"
-    - "operador3"
-  tasks:
-  - name: "crear grupo operador"
-    become: yes 
-    group:
-      name: operador
-      state: present
-
-  - name: "Create user accounts"
-    user:
-      name: "{{ item }}"
-      groups: "operador"
-    with_items: "{{ users }}"
-
-  - name: "Add authorized keys"
-    authorized_key:
-      user: "{{ item }}"
-      key: "{{ lookup('file', 'files/'+ item + '.pub') }}"    #   files/operador1.pub files/operador2.pub ...
-    with_items: "{{ users }}"
-
-  - name: "Allow admin users to sudo without a password"
-    lineinfile:
-      dest: "/etc/sudoers"
-      state: "present"
-      regexp: "^%operador"
-      line: "%operador ALL=(ALL) NOPASSWD: ALL"
-
-  - name: Install apache httpd but avoid starting it immediately (state=present is optional)
-     package:
-      name: httpd
-     when: ansible_os_family == 'RedHat'
-     become: yes
-```
 
