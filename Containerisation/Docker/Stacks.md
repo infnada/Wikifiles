@@ -2,11 +2,40 @@
 title: Stacks
 description: 
 published: true
-date: 2019-03-08T22:47:07.778Z
+date: 2019-03-08T23:01:38.694Z
 tags: 
 ---
 
 > La mayoría de estos ejemplos utilizan volumenes por NFS y Traefik. Al mismo tiempo pueden contener constraints específicos para mis pruebas.
+
+# Networks used
+```
+docker network create -d overlay --attachable net_postgres
+docker network create -d overlay --attachable net_redis  
+docker network create -d overlay --attachable net_consul
+docker network create -d overlay --attachable net_traefik
+docker network create -d overlay --attachable net_internal_web_gateway
+docker network create -d overlay --attachable net_prometheus
+docker network create -d overlay --attachable net_grafana
+docker network create -d overlay --attachable net_elasticsearch
+docker network create -d overlay --attachable net_logstash
+docker network create -d overlay --attachable net_kibana
+docker network create -d overlay --attachable net_mysql
+```
+
+# Domains used
+```
+https://portainer.gp.local/
+https://swarmpit.gp.local
+https://gitlab.gp.local
+https://traefik.gp.local
+https://grafana.gp.local
+https://kibana.gp.local
+https://prometheus.gp.local
+https://consul.gp.local
+https://weavescope.gp.local
+https://netdata.gp.local
+```
 
 # Base
 - [Consul](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Consul)
