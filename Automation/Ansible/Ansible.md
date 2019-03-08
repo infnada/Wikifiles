@@ -2,7 +2,7 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:26:37.010Z
+date: 2019-03-08T20:26:45.129Z
 tags: 
 ---
 
@@ -104,9 +104,3 @@ $ vi debian-install-apache2.yaml
          - php-mysql
       when: ansible_distribution == "CentOS"
 ```
-
-- Creación de usuarios
-
-> Hay que crear el directorio `files` en local para copiar las claves ssh
-
-
