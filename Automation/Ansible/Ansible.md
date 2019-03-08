@@ -2,7 +2,7 @@
 title: Ansible
 description: 
 published: true
-date: 2019-03-08T20:28:37.540Z
+date: 2019-03-08T20:29:09.979Z
 tags: 
 ---
 
@@ -155,7 +155,7 @@ $ vi debian-install-apache2.yaml
 ```
 #Ansible needs python-mysqldb
 - name: Install MySQL
-  apt: pkg=&#123;&#123;item}} state=latest update_cache=false
+  apt: pkg={{item}} state=latest update_cache=false
   register: ispconfig_install_step1
   with_items:
     - pwgen
@@ -169,9 +169,9 @@ $ vi debian-install-apache2.yaml
   register: mysql_root_password
 
 - name: update mysql root password for all root accounts
-  mysql_user: name=root host=&#123;&#123; item }} password=&#123;&#123;mysql_root_password.stdout}}  update_password=always state=present
+  mysql_user: name=root host={{ item }} password={{mysql_root_password.stdout}}  update_password=always state=present
   with_items:
-    - "&#123;&#123; inventory_hostname }}"
+    - "{{ inventory_hostname }}"
     - 127.0.0.1
     - ::1
     - localhost
