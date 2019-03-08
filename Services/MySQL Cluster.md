@@ -2,7 +2,7 @@
 title: MySQL Cluster
 description: 
 published: true
-date: 2019-03-08T18:21:36.272Z
+date: 2019-03-08T19:25:32.903Z
 tags: 
 ---
 
