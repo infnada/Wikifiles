@@ -2,9 +2,11 @@
 title: Stacks
 description: 
 published: true
-date: 2019-03-08T22:26:00.551Z
+date: 2019-03-08T22:47:07.778Z
 tags: 
 ---
+
+> La mayoría de estos ejemplos utilizan volumenes por NFS y Traefik. Al mismo tiempo pueden contener constraints específicos para mis pruebas.
 
 # Base
 - [Consul](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Consul)
