@@ -2,7 +2,7 @@
 title: Consul
 description: 
 published: true
-date: 2019-03-08T22:39:25.557Z
+date: 2019-03-08T22:42:46.836Z
 tags: 
 ---
 
@@ -38,7 +38,7 @@ services:
         - "traefik.port=8500"
         - "traefik.docker.network=net_internal_web_gateway"
         - "traefik.backend=consul"
-        - "traefik.frontend.rule=Host:consul.gp.local"
+        - "traefik.frontend.rule=Host:consul.gp.local" # Set you domain
       mode: global
       endpoint_mode: dnsrr
       resources:
