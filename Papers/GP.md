@@ -2,7 +2,7 @@
 title: GP
 description: 
 published: true
-date: 2019-03-08T20:53:56.138Z
+date: 2019-03-09T20:20:01.165Z
 tags: 
 ---
 
@@ -108,4 +108,6 @@ En mi caso, soy un enamorado de Gitlab-CI. Te lo hace absolutamente todo.
 -	Publicación del servicio sin disrupción a tu cluster de Docker.
 
 Sólo necesitas un SO, Docker y Gitlab. Eso si, por favor, guardar las sesiones en Redis o parecidos…
+
+El siguiente paso lógico sería preguntarnos; ¿Seguimos invirtiendo en hardware on-premise, o vamos tirando a Kubernetes en cloud?
 
