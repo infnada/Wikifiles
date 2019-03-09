@@ -2,14 +2,14 @@
 title: TIG
 description: Telegraf + Influx + Grafana
 published: true
-date: 2019-03-09T16:49:08.675Z
+date: 2019-03-09T16:50:54.046Z
 tags: 
 ---
 
 > Basado en Docker Stack
 
 - https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Telegraf
-- https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Influx
+- https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/InfluxDB
 - https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Grafana
 
 ---
