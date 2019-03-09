@@ -2,7 +2,7 @@
 title: Dockerfile
 description: 
 published: true
-date: 2019-03-09T16:40:02.729Z
+date: 2019-03-09T16:41:00.406Z
 tags: 
 ---
 
