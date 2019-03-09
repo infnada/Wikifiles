@@ -2,11 +2,11 @@
 title: Logspout
 description: 
 published: true
-date: 2019-03-08T23:16:53.048Z
+date: 2019-03-09T18:24:01.765Z
 tags: 
 ---
 
-```
+```yaml
 version: "3.6"
 
 services:
