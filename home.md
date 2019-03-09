@@ -1,4 +1,17 @@
-<!-- TITLE: Home -->
-<!-- SUBTITLE: A quick summary of Home -->
+---
+title: Home
+description: 
+published: true
+date: 2019-03-09T16:31:45.540Z
+tags: 
+---
 
-# Header
+# To read/watch:
+
+- https://www.packtpub.com/packt/free-ebook/what-you-need-know-about-docker
+- https://github.com/veggiemonk/awesome-docker
+
+# Online Learning
+
+- https://www.katacoda.com/
+- https://labs.play-with-k8s.com/
