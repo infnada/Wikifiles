@@ -2,13 +2,13 @@
 title: Consul
 description: 
 published: true
-date: 2019-03-08T22:42:46.836Z
+date: 2019-03-09T18:20:27.023Z
 tags: 
 ---
 
 - Hay muchas maneras de deployear un Consul, pero esta es la que me ha dado menos problemas para reestablecer el quorum en caso de caida.
 
-```
+```yaml
 #https://github.com/hashicorp/docker-consul/issues/66
 version: '3.6'
 
