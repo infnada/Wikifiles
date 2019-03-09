@@ -2,11 +2,11 @@
 title: Swarmpit
 description: 
 published: true
-date: 2019-03-08T22:45:15.429Z
+date: 2019-03-09T18:21:17.524Z
 tags: 
 ---
 
-```
+```yaml
 version: '3.3'
 
 services:
