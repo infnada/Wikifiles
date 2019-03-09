@@ -2,13 +2,13 @@
 title: Portainer
 description: 
 published: true
-date: 2019-03-08T22:42:24.583Z
+date: 2019-03-09T18:21:07.713Z
 tags: 
 ---
 
 - Portainer se queda inaccesible cuando un nodo del cluster no puede, por ejemplo, acceder a un volumen NFS o de vSphere... o vete a saber por cual motivo. Algo que nunca me ha pasado con Swarmpit.
 
-```
+```yaml
 version: '3.7'
 
 services:
