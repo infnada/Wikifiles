@@ -2,9 +2,11 @@
 title: Minikube
 description: 
 published: true
-date: 2019-03-09T11:16:37.245Z
+date: 2019-03-09T11:17:51.078Z
 tags: 
 ---
+
+> Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
 `$ minikube version`
 `$ minikube start`
@@ -14,7 +16,7 @@ tags:
 `$ kubectl get pods`
 `$ kubectl expose deployment first-deployment --port=80 --type=NodePort`
 ```
-$ export PORT=$(kubectl get svc first-deployment -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}')
+$ export PORT=$(kubectl get svc first-deployment -o go-template='&#123;&#123;range.spec.ports}}&#123;&#123;if .nodePort}}&#123;&#123;.nodePort}}&#123;&#123;"\n"}}&#123;&#123;end}}&#123;&#123;end}}')
 echo "Accessing host01:$PORT"
 curl host01:$PORT
 ```
