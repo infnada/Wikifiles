@@ -2,11 +2,11 @@
 title: Prometheus
 description: 
 published: true
-date: 2019-03-08T23:25:26.378Z
+date: 2019-03-09T18:24:49.468Z
 tags: 
 ---
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -65,7 +65,7 @@ networks:
 
 - prometheus.yml
 
-```
+```yaml
 global:
   scrape_interval:     15s
   evaluation_interval: 15s
