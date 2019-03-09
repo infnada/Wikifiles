@@ -2,10 +2,11 @@
 title: Traefik
 description: 
 published: true
-date: 2019-03-08T23:04:08.637Z
+date: 2019-03-09T16:52:09.513Z
 tags: 
 ---
 
+> https://docs.traefik.io/user-guide/examples/
 > Mejor utilizar `ports` en modo `host`
 
 ```
