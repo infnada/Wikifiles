@@ -2,7 +2,7 @@
 title: Stacks
 description: 
 published: true
-date: 2019-03-09T16:50:25.302Z
+date: 2019-03-09T18:28:11.045Z
 tags: 
 ---
 
@@ -12,18 +12,18 @@ tags:
 
 > Para un buen aislamiento, cada servicio debería conectar con Traefik desde una red diferente. En este caso siempre utilizamos `net_internal_web_gateway`
 
-```
-docker network create -d overlay --attachable net_postgres
-docker network create -d overlay --attachable net_redis  
-docker network create -d overlay --attachable net_consul
-docker network create -d overlay --attachable net_traefik
-docker network create -d overlay --attachable net_internal_web_gateway
-docker network create -d overlay --attachable net_prometheus
-docker network create -d overlay --attachable net_grafana
-docker network create -d overlay --attachable net_elasticsearch
-docker network create -d overlay --attachable net_logstash
-docker network create -d overlay --attachable net_kibana
-docker network create -d overlay --attachable net_mysql
+```sh
+$ docker network create -d overlay --attachable net_postgres
+$ docker network create -d overlay --attachable net_redis  
+$ docker network create -d overlay --attachable net_consul
+$ docker network create -d overlay --attachable net_traefik
+$ docker network create -d overlay --attachable net_internal_web_gateway
+$ docker network create -d overlay --attachable net_prometheus
+$ docker network create -d overlay --attachable net_grafana
+$ docker network create -d overlay --attachable net_elasticsearch
+$ docker network create -d overlay --attachable net_logstash
+$ docker network create -d overlay --attachable net_kibana
+$ docker network create -d overlay --attachable net_mysql
 ```
 
 # Domains used
