@@ -2,13 +2,13 @@
 title: Metricbeat
 description: 
 published: true
-date: 2019-03-08T23:19:05.173Z
+date: 2019-03-09T18:24:10.606Z
 tags: 
 ---
 
 > Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -57,7 +57,7 @@ configs:
 
 - metricbeat.yml
 
-```
+```yaml
 # https://github.com/elastic/beats/blob/master/metricbeat/metricbeat.reference.yml
 
 #-------------------------------- Autodiscovery -------------------------------
