@@ -2,7 +2,7 @@
 title: Docker Machine
 description: 
 published: true
-date: 2019-03-09T17:05:35.895Z
+date: 2019-03-09T17:08:01.368Z
 tags: 
 ---
 
