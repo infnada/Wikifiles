@@ -2,13 +2,13 @@
 title: Heartbeat
 description: 
 published: true
-date: 2019-03-08T23:13:58.161Z
+date: 2019-03-09T18:23:54.191Z
 tags: 
 ---
 
 > Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -59,7 +59,7 @@ configs:
 
 - heartbeat.yml
 
-```
+```yaml
 ################### Heartbeat Configuration Example #########################
 
 # This file is a full configuration example documenting all non-deprecated
