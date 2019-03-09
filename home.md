@@ -2,7 +2,7 @@
 title: Home
 description: 
 published: true
-date: 2019-03-09T17:15:13.815Z
+date: 2019-03-09T17:27:58.956Z
 tags: 
 ---
 
@@ -11,7 +11,7 @@ tags:
 - https://www.packtpub.com/packt/free-ebook/what-you-need-know-about-docker
 - https://github.com/veggiemonk/awesome-docker
 
-# Online Llarning
+# Online Learning
 
 - https://www.katacoda.com/
 - https://labs.play-with-k8s.com/
