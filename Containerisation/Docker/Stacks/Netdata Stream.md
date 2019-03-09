@@ -2,13 +2,13 @@
 title: Netdata Stream
 description: 
 published: true
-date: 2019-03-08T23:21:38.592Z
+date: 2019-03-09T18:24:35.034Z
 tags: 
 ---
 
 > Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
-```
+```yaml
 version: '3.6'
 
 services:
@@ -87,7 +87,7 @@ configs:
 
 - netdata_master_stream.conf
 
-```
+```ini
 [11111111-2222-3333-4444-555555555555]
     # enable/disable this API key
     enabled = yes
@@ -104,7 +104,7 @@ configs:
 
 - netdata_slave_stream.conf
 
-```
+```ini
 [stream]
     # stream metrics to another netdata
     enabled = yes
@@ -118,7 +118,7 @@ configs:
 
 - netdata_slave_config.conf
 
-```
+```ini
 [global]
     # disable the local database
     memory mode = none
