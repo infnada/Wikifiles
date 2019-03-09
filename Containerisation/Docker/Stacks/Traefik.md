@@ -2,14 +2,14 @@
 title: Traefik
 description: 
 published: true
-date: 2019-03-09T16:52:09.513Z
+date: 2019-03-09T18:22:39.339Z
 tags: 
 ---
 
 > https://docs.traefik.io/user-guide/examples/
 > Mejor utilizar `ports` en modo `host`
 
-```
+```yaml
 version: "3.4"
 
 services:
@@ -105,7 +105,7 @@ XXXXXXX
 ```
 
 - traefik.toml
-```
+```toml
 defaultEntryPoints = ["http", "https"]
 
 [entryPoints]
