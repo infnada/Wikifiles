@@ -2,7 +2,7 @@
 title: Docker Swarm
 description: 
 published: true
-date: 2019-03-08T19:23:17.301Z
+date: 2019-03-09T16:43:16.869Z
 tags: 
 ---
 
@@ -50,6 +50,10 @@ tags:
 
 - Sólo hay que ejecutar el output del comando `join-token` en el nodo a incluir al swarm.
 
+### Eliminar nodos del swarm
+
+`$ docker swarm leave [--force]`
+
 # Comandos básicos
 
 - Listar los nodos del Swarm
@@ -59,3 +63,5 @@ tags:
 # Stack
 
 `$ docker stack deploy -c archivo.yaml nombre_stack`
+
+> Algunos Stacks de ejemplo https://wiki.isartnavarro.io/Containerisation/Docker/Stacks
