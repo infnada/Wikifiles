@@ -2,7 +2,7 @@
 title: Kubernetes
 description: 
 published: true
-date: 2019-03-09T17:14:21.217Z
+date: 2019-03-09T18:29:36.415Z
 tags: 
 ---
 
@@ -44,7 +44,7 @@ tags:
 > https://kubernetes.io/docs/setup/independent/install-kubeadm/
 
 ### Install CNI plugins (required for most pod network):
-```
+```sh
 $ CNI_VERSION="v0.6.0"
 $ mkdir -p /opt/cni/bin
 $ curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz" | tar -C /opt/cni/bin -xz
@@ -52,7 +52,7 @@ $ curl -L "https://github.com/containernetworking/plugins/releases/download/${CN
 
 ### Install crictl (required for kubeadm / Kubelet Container Runtime Interface (CRI))
 
-```
+```sh
 $ CRICTL_VERSION="v1.11.1"
 $ mkdir -p /opt/bin
 $ curl -L "https://github.com/kubernetes-incubator/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz" | tar -C /opt/bin -xz
@@ -60,7 +60,7 @@ $ curl -L "https://github.com/kubernetes-incubator/cri-tools/releases/download/$
 
 ### Install kubeadm, kubelet, kubectl and add a kubelet systemd service:
 
-```
+```sh
 $ RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
 
 $ mkdir -p /opt/bin
@@ -106,7 +106,7 @@ $ systemctl enable --now kubelet
 
 # Lanzar Deployments
 
-```
+```yaml
 vi deployment.yaml
 ---
 apiVersion: extensions/v1beta1
@@ -141,7 +141,7 @@ spec:
 
 # Lanzar Servicios
 
-```
+```yaml
 vi service.yaml
 ---
 piVersion: v1
