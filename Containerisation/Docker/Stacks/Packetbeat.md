@@ -2,13 +2,13 @@
 title: Packetbeat
 description: 
 published: true
-date: 2019-03-08T23:23:47.619Z
+date: 2019-03-09T18:24:41.821Z
 tags: 
 ---
 
 > Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -58,7 +58,7 @@ configs:
 
 - packetbeat.yml
 
-```
+```yaml
 #============================== Network device ================================
 packetbeat.interfaces.device: any
 
