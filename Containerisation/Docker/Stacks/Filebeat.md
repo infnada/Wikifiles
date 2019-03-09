@@ -2,13 +2,13 @@
 title: Filebeat
 description: 
 published: true
-date: 2019-03-08T23:07:14.524Z
+date: 2019-03-09T18:23:29.448Z
 tags: 
 ---
 
 > Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -65,7 +65,7 @@ configs:
 
 - filebeat.yml
 
-```
+```yaml
 # https://github.com/elastic/beats/blob/master/filebeat/filebeat.reference.yml
 
 filebeat.modules:
