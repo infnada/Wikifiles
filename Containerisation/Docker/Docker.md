@@ -2,7 +2,7 @@
 title: Docker
 description: 
 published: true
-date: 2019-03-09T16:55:34.924Z
+date: 2019-03-09T18:25:51.416Z
 tags: 
 ---
 
@@ -29,7 +29,7 @@ tags:
 
 ### Utilizando script
 
-```
+```sh
 $ curl -fsSL https://get.docker.com -o get-docker.sh
 $ sudo sh get-docker.sh
 ```
@@ -47,7 +47,7 @@ $ sudo sh get-docker.sh
     
 Servicio:
 
-```
+```yaml
 logging:
     driver: "json-file"
     options:
@@ -56,7 +56,7 @@ logging:
 
 Global por nodo:
 
-```
+```json
 $vi /etc/docker/daemon.json
 ---------
 {
@@ -122,7 +122,7 @@ $vi /etc/docker/daemon.json
 
 - Copiar datos a/de un contenedor
 
-```
+```sh
 $ docker cp nombre_container:/ruta_container ruta_local
 $ docker cp ruta_local nombre_container:/ruta_container
 ```
@@ -196,7 +196,7 @@ $ docker cp ruta_local nombre_container:/ruta_container
 
 - Volumen vSphere
 
-```
+```sh
 $ docker volume create --driver=vsphere --name=nombre_volumen -o size=10gb
 $ docker volume create --driver=vfile --name=nombre_volumen_compartido -o size=10gb
 ```
