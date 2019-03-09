@@ -2,11 +2,11 @@
 title: Gitlab Runners
 description: 
 published: true
-date: 2019-03-08T23:31:27.214Z
+date: 2019-03-09T18:25:08.262Z
 tags: 
 ---
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -118,7 +118,7 @@ networks:
 
 - gitlab.rb
 
-```
+```ruby
 # gitlab.rb
 
 external_url 'https://gitlab.gp.local' # Set your domain
@@ -170,7 +170,7 @@ gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0', '10.0.16.0/24']
 
 - gitlab_runner.toml
 
-```
+```toml
 concurrent = 1
 
 [[runners]]
