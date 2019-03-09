@@ -2,11 +2,23 @@
 title: Kubernetes
 description: 
 published: true
-date: 2019-03-09T13:05:16.352Z
+date: 2019-03-09T17:13:47.272Z
 tags: 
 ---
 
 > https://kubernetes.io/
+
+# To read
+> https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+> https://kubernetes.io/docs/concepts/
+> Network comparison: https://chrislovecnm.com/kubernetes/cni/choosing-a-cni-provider/
+> Serie de tutoriales de Oscar Mas sobre K8s: https://www.jorgedelacruz.es/2017/11/28/kubernetes-introduccion-kubernetes/
+> HELM https://www.digitalocean.com/community/tutorials/an-introduction-to-helm-the-package-manager-for-kubernetes
+> CNAB & Duffle: https://github.com/deislabs/duffle/tree/master/docs
+> **Istio: https://istio.io/docs/setup/kubernetes/quick-start/**
+> Deployment Strategies in K8s (hay más maneras): https://container-solutions.com/kubernetes-deployment-strategies/
+
+> https://hub.docker.com/editions/enterprise/docker-ee-trial/trial
 
 # Puertos utilizados
 
