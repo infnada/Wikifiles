@@ -2,11 +2,11 @@
 title: Weaveworks Scope
 description: 
 published: true
-date: 2019-03-08T22:53:39.844Z
+date: 2019-03-09T18:22:46.288Z
 tags: 
 ---
 
-```
+```yaml
 version: '3.5'
 
 services:
