@@ -2,11 +2,11 @@
 title: Grafana
 description: 
 published: true
-date: 2019-03-08T23:09:49.900Z
+date: 2019-03-09T18:23:36.301Z
 tags: 
 ---
 
-```
+```yaml
 version: "3.6"
 
 services:
@@ -66,7 +66,7 @@ networks:
 
 - grafana.ini
 
-```
+```ini
 [database]
 path = "/data/grafana.db"
 
