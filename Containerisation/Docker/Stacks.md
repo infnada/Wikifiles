@@ -2,7 +2,7 @@
 title: Stacks
 description: 
 published: true
-date: 2019-03-08T23:02:35.867Z
+date: 2019-03-09T16:50:25.302Z
 tags: 
 ---
 
@@ -55,6 +55,7 @@ https://netdata.gp.local
 - [Filebeat](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Filebeat)
 - [Grafana](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Grafana)
 - [Heartbeat](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Heartbeat)
+- [InfluxDB](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/InfluxDB) - Not really monitoring
 - [Kibana](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Kibana)
 - [Logspout](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Logspout)
 - [Logstash](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Logstash)
@@ -62,6 +63,7 @@ https://netdata.gp.local
 - [Netdata Stream](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Netdata%20Stream)
 - [Packetbeat](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Packetbeat)
 - [Prometheus](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Prometheus)
+- [Telegraf](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Telegraf)
 
 # CI/CD
 - [Gitlab with Runners](https://wiki.isartnavarro.io/Containerisation/Docker/Stacks/Gitlab%20Runners)
