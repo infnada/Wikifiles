@@ -2,7 +2,7 @@
 title: Docker
 description: 
 published: true
-date: 2019-03-08T20:39:26.800Z
+date: 2019-03-09T16:54:42.609Z
 tags: 
 ---
 
@@ -135,6 +135,7 @@ $ docker cp ruta_local nombre_container:/ruta_container
     - `-f` se utiliza como el comando `tail`
 
 `$ docker logs nombre_contenedor`
+> Troubleshooting -> `/var/log/messages`, `/var/log/syslog`...
 
 - Mostrar estadísticas de Docker
 
