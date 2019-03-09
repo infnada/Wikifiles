@@ -2,7 +2,7 @@
 title: Kubernetes
 description: 
 published: true
-date: 2019-03-08T19:23:44.174Z
+date: 2019-03-09T11:50:59.068Z
 tags: 
 ---
 
@@ -61,3 +61,33 @@ $ mkdir -p /etc/systemd/system/kubelet.service.d
 $ curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/10-kubeadm.conf" | sed "s:/usr/bin:/opt/bin:g" > /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 $ systemctl enable --now kubelet
 ```
+
+# Lanzar contenedores
+
+- Básico
+
+`$ kubectl run http --image=katacoda/docker-http-server:latest --replicas=1`
+`$ kubectl get deployments`
+`$ kubectl describe deployment http`
+
+- Exponer contenedor básico
+
+`$ kubectl expose deployment http --external-ip="172.17.0.66" --port=8000 --target-port=80`
+`$ curl http://172.17.0.66:8000`
+
+- Exponer contenedor al lanzarlo
+
+`$ kubectl run httpexposed --image=katacoda/docker-http-server:latest --replicas=1 --port=80 --hostport=8001`
+`$ curl http://172.17.0.66:8001`
+
+> Expone el Pod via Docker Port Mapping. Por lo tanto no se verá el servicio listado usando `$ kubectl get svc`
+
+# Escalar contenedores
+
+`$ kubectl scale --replicas=3 deployment http`
+`$ kubectl get pods`
+
+> Al arrancar los nuevos Pods estos serán añadodos al servicio de Load Balancing.
+
+`$ kubectl describe svc http`
+`$ curl http://172.17.0.66:8000`
