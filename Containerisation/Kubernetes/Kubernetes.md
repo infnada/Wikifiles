@@ -2,7 +2,7 @@
 title: Kubernetes
 description: 
 published: true
-date: 2019-03-09T11:50:59.068Z
+date: 2019-03-09T11:59:40.174Z
 tags: 
 ---
 
@@ -27,7 +27,7 @@ tags:
 | TCP      | Inbound   | 10250       | Kubelet API           | Self, Control plane     |
 | TCP      | Inbound   | 30000-32767 | NodePort Services**   | All                     |
 
-# Requerimientos para Kubernetes utilizando kubeadm+
+# Requerimientos para Kubernetes utilizando kubeadm
 
 > https://kubernetes.io/docs/setup/independent/install-kubeadm/
 
@@ -91,3 +91,63 @@ $ systemctl enable --now kubelet
 
 `$ kubectl describe svc http`
 `$ curl http://172.17.0.66:8000`
+
+# Lanzar Deployments
+
+```
+vi deployment.yaml
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp1
+    spec:
+      containers:
+      - name: webapp1
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
+```
+
+`$ kubectl create -f deployment.yaml`
+`$ kubectl get deployment`
+`$ kubectl describe deployment webapp1`
+
+## Actualizar Deployments
+
+- Modifica el archivo anterior y pon `replicas: 4`
+
+`$ kubectl apply -f deployment.yaml`
+`$ kubectl get pods`
+`$ curl host01:30080`
+
+# Lanzar Servicios
+
+```
+vi service.yaml
+---
+piVersion: v1
+kind: Service
+metadata:
+  name: webapp1-svc
+  labels:
+    app: webapp1
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30080
+  selector:
+    app: webapp1
+```
+
+`$ kubectl create -f service.yaml`
+`$ kubectl get svc`
+`$ kubectl describe svc webapp1-svc`
+`$ curl host01:30080`
