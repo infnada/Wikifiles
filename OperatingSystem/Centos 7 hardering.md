@@ -2,13 +2,15 @@
 title: Centos 7 hardering
 description: 
 published: true
-date: 2019-03-08T19:27:07.128Z
+date: 2019-03-09T17:25:04.126Z
 tags: 
 ---
 
-#Hardering Centos 7 minimal
+# Hardering Centos 7 minimal
 
-##Particionado de disco
+> **THIS COULD BE REALLY OUTDATED!!!!!**
+
+## Particionado de disco
 * Swap 2G --> swap
 * / 8G --> xfs bajo LVM
 * /boot 488Mb --> ext4
@@ -28,7 +30,7 @@ UUID=11111111-1111-1111-1111-111111111111 /boot ext4    defaults        1 2
 ---
 ```
 
-##Configuración NTP
+## Configuración NTP
 
 ```
 $ yum install ntp ntpdate
@@ -41,20 +43,21 @@ $ ntpdate IP_NTP_INTERNO
 $ systemctl start ntpd
 ```
 
-##Deshabilitar montaje de USB
+## Deshabilitar montaje de USB
 
 `$ echo "install usb-storage /bin/false" > /etc/modprobe.d/usb-storage.conf`
 
-##Seguridad de contraseñas
+## Seguridad de contraseñas
 - Habilitar SHA512 por contra de MD5
 
 ```
-authconfig --passalgo=sha512 --update
+$ authconfig --passalgo=sha512 --update
 ```
 
 - Configurar políticas
 ```
-vi /etc/security/pwquality.conf
+$ vi /etc/security/pwquality.conf
+---
   difok = 5
   minlen = 8
   dcredit = 1
@@ -65,7 +68,9 @@ vi /etc/security/pwquality.conf
   maxrepeat = 3
   maxclassrepeat = 3
   gecoscheck = 1
-vi /etc/login.defs
+  
+$ vi /etc/login.defs
+---
   PASS_MAX_DAYS   180
   PASS_MIN_DAYS   1
   PASS_MIN_LEN    8
@@ -74,33 +79,37 @@ vi /etc/login.defs
 - Loguear intentos erroneos de login
 
 ```
-vi /etc/pam.d/system-auth
+$ vi /etc/pam.d/system-auth
+---
   session required pam_lastlog.so showfailed
 ```
 
 - Reintentos de login
 
 ```
-vi /etc/pam.d/password-auth
+$ vi /etc/pam.d/password-auth
+---
   password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
 ```
 
 - Bloqueo al superar el máximo de reintentos
 
 ```
-vi /etc/pam.d/password-auth
+$ vi /etc/pam.d/password-auth
+---
   auth [default=die] pam_faillock.so authfail deny=3 unlock_time=604800 fail_interval=900
   auth required pam_faillock.so authsucc deny=3 unlock_time=604800 fail_interval=900
 ```
 
 - Prevenir login sin password
 ```
-sed -i 's/\<nullok\>//g' /etc/pam.d/system-auth
+$ sed -i 's/\<nullok\>//g' /etc/pam.d/system-auth
 ```
 
 ##Configuración SSHD
 ```
-vi /etc/ssh/sshd_config
+$ vi /etc/ssh/sshd_config
+---
 ## Oblicación del protoclo 2 de ssh
    Protocol 2
 ## Tiempo d'espera de la pantalla de longin antes de cerrarse
@@ -123,70 +132,73 @@ vi /etc/ssh/sshd_config
 PermitUserEnvironment no
 ## Ciphers
   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
-
 ```
 
 ##Instalar AIDE
 ```
-yum install aide -y && /usr/sbin/aide --init && cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz && /usr/sbin/aide --check
-aide --update
+$ yum install aide -y && /usr/sbin/aide --init && cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz && /usr/sbin/aide --check
+$ aide --update
 ```
 
 ##Instalar RKHunter
 ```
-yum -y install rkhunter
-rkhunter --update
+$ yum -y install rkhunter
+$ rkhunter --update
 ......
 modificar configuración al gusto
 ......
-rkhunter --propupd
+$ rkhunter --propupd
 ```
 
 > Después de una modificación de archivo y estar seguro de que esta es correcta, ejecutar lo siguente:
 ```
-rkhunter -c --enable all --disable none --rwo
+$ rkhunter -c --enable all --disable none --rwo
 ```
 > Listado de tests
 ```
-rkhunter --list
+$ rkhunter --list
 ```
 
 ##Configurar GRUB
 - Verificar permisos
 ```
-chmod 600 /boot/grub2/grub.cfg
-  -rw-------. 1 root root 4289 nov  8 12:09 /boot/grub2/grub.cfg
+$ chmod 600 /boot/grub2/grub.cfg
 ```
 
 - Configurar contraseña
 ```
-cd /etc/grub.d/
-grub2-mkpasswd-pbkdf2
+$ cd /etc/grub.d/
+$ grub2-mkpasswd-pbkdf2
   Introduzca la contraseña:
   Reintroduzca la contraseña:
-  El hash PBKDF2 de su contraseña es grub.pbkdf2.sha512.10000.E25620C940319CD5B8AD237025E328121951EAFEBE90217DD1B6BE88992BCADDFA856365FC302575BCD58107CE20A39D875EC89EBA6DE16A5958B357C3260F98.69577375971964E38A307A41BC66B7C3F51BE8E94F78681369E6EFF3953E7DD561C261448E654B7B939EF55ACACB255E541B21925D9615E6194ED5D5B34B5BA1
-vi 40_custom
+  El hash PBKDF2 de su contraseña es grub.pbkdf2.sha512.10000.E25620C940319CD5B8AD237025E3281...
+
+$ vi 40_custom
+---
   # define superusers
   set superusers="g2r00t"
 
   #define users
-  password_pbkdf2 g2r00t grub.pbkdf2.sha512.10000.E25620C940319CD5B8AD237025E328121951EAFEBE90217DD1B6BE88992BCADDFA856365FC302575BCD58107CE20A39D875EC89EBA6DE16A5958B357C3260F98.69577375971964E38A307A41BC66B7C3F51BE8E94F78681369E6EFF3953E7DD561C261448E654B7B939EF55ACACB255E541B21925D9615E6194ED5D5B34B5BA1
-grub2-mkconfig -o /boot/grub2/grub.cfg
+  password_pbkdf2 g2r00t grub.pbkdf2.sha512.10000.E25620C940319CD5B8AD237025E3281...
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
 ##Networking
 - Deshabilitar IPv6
 ```
-vi /etc/modprobe.d/disabled.conf
+$ vi /etc/modprobe.d/disabled.conf
+---
   options ipv6 disable=1
-vi /etc/sysconfig/network
+
+$ vi /etc/sysconfig/network
+---
   NETWORKING_IPV6=no
   IPV6INIT=no
 ```
 
 - Deshabilitar PIPA (DHCP)
 ```
-echo "NOZEROCONF=yes" >> /etc/sysconfig/network
+$ echo "NOZEROCONF=yes" >> /etc/sysconfig/network
 ```
 
 - Otras configuraciones
@@ -255,7 +267,8 @@ ZONE=PublicDMZ
 
 - Congiguración DNS
 ```
-vi /etc/resolv.conf
+$ vi /etc/resolv.conf
+---
   search tudominio.local
   nameserver IP_DNS_INTERNO_1
   nameserver IP_DNS_INTERNO_2
@@ -264,65 +277,66 @@ vi /etc/resolv.conf
 ##Firewalld
 ```
 # Configuración Firewall por defecto
-  firewall-cmd --permanent --new-zone=PublicDMZ/Local
-  firewall-cmd --zone=PublicDMZ --add-interface=ens192
-  firewall-cmd --reload  
-  firewall-cmd --set-default-zone=PublicDMZ
-  firewall-cmd --reload
+$ firewall-cmd --permanent --new-zone=PublicDMZ/Local
+$ firewall-cmd --zone=PublicDMZ --add-interface=ens192
+$ firewall-cmd --reload  
+$ firewall-cmd --set-default-zone=PublicDMZ
+$ firewall-cmd --reload
 ###### Rules
 
 ### OUTPUT
 # Connexión establecida
-  firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 0 -m state --state ESTABLISHED,RELATED -j ACCEPT
 # DNS
-  firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp -d IP_DNS_INTERNO_1 --dport 53 -j ACCEPT
-  firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp -d IP_DNS_INTERNO_2 --dport 53 -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp -d IP_DNS_INTERNO_1 --dport 53 -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp -d IP_DNS_INTERNO_2 --dport 53 -j ACCEPT
 # SMTP 
-  firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p tcp -d IP_SMTP_INTERNO --dport 25 -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p tcp -d IP_SMTP_INTERNO --dport 25 -j ACCEPT
 # NTP 
-  firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp -d IP_NTP_INTERNO --dport 123 -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 1 -p udp -d IP_NTP_INTERNO --dport 123 -j ACCEPT
 # Drop all
-  firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 2 -j DROP
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter OUTPUT 2 -j DROP
   
 ### INPUT
 # PING desde servidor de monitoring y LAN
-  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p icmp -s NETWORL/24 -j ACCEPT
-  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p icmp -s IP_MONITORING_SERVER -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p icmp -s NETWORL/24 -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p icmp -s IP_MONITORING_SERVER -j ACCEPT
 # SSH des de LAN
-  firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp -s NETWORL/24 --dport 22 -j ACCEPT
+$ firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp -s NETWORL/24 --dport 22 -j ACCEPT
 ```
 
 ##Deshabilitar funciones por defecto
 >  Deshabilitar protocolos no usados
 - Protocol de contgrol de Datagramas orientat a missatges 
 ```
-echo "install dccp /bin/false" > /etc/modprobe.d/dccp.conf
+$ echo "install dccp /bin/false" > /etc/modprobe.d/dccp.conf
 ```
 - Stream Control Transmission Protocol Alternativa a TCP/UDP pero permite mensajes sin orden
 ```
-echo "install sctp /bin/false" > /etc/modprobe.d/sctp.conf
+$ echo "install sctp /bin/false" > /etc/modprobe.d/sctp.conf
 ```
 - Reliable Datagram Sockets envio de datagramas 
 ```
-echo "install rds /bin/false" > /etc/modprobe.d/rds.conf
+$ echo "install rds /bin/false" > /etc/modprobe.d/rds.conf
 ```
 - Transparent Inter-process Communication comunicación intra cluster
 ```
-echo "install tipc /bin/false" > /etc/modprobe.d/tipc.conf
+$ echo "install tipc /bin/false" > /etc/modprobe.d/tipc.conf
 ```
 > Desinstalar paquetes no usados
 - Postfix
 ```
-systemctl stop postfix
-systemctl disable postfix
-yum remove postfix
-rm -rf /etc/postfix/
+$ systemctl stop postfix
+$ systemctl disable postfix
+$ yum remove postfix
+$ rm -rf /etc/postfix/
 ```
 
 ##Otras configuraciones
 - Configurar single mode con contraseña
 ```
-vi /etc/sysconfig/init
+$ vi /etc/sysconfig/init
+---
   SINGLE=/sbin/sulogin
 ```
 
@@ -332,39 +346,42 @@ psacct --> Herramientas de monitorització de processos
 screen
 open-vm-tools
 ```
-yum -y install irqbalance psacct screen open-vm-tools
-systemctl enable irqbalance
-systemctl enable psacct
+$ yum -y install irqbalance psacct screen open-vm-tools
+$ systemctl enable irqbalance
+$ systemctl enable psacct
 ```
 
 - Habilitar unmask 077
 ```
-vi /etc/bashrc
+$ vi /etc/bashrc
+---
    umask 077
    umask 077
-vi /etc/csh.cshrc
+
+$ vi /etc/csh.cshrc
+---
    umask 077
    umask 077
 ```
 
 - Deshabilitar filesystems infrecuentes
 ```
-echo "install cramfs /bin/false" > /etc/modprobe.d/cramfs.conf
-echo "install freevxfs /bin/false" > /etc/modprobe.d/freevxfs.conf
-echo "install jffs2 /bin/false" > /etc/modprobe.d/jffs2.conf
-echo "install hfs /bin/false" > /etc/modprobe.d/hfs.conf
-echo "install hfsplus /bin/false" > /etc/modprobe.d/hfsplus.conf
-echo "install squashfs /bin/false" > /etc/modprobe.d/squashfs.conf
-echo "install udf /bin/false" > /etc/modprobe.d/udf.conf
+$ echo "install cramfs /bin/false" > /etc/modprobe.d/cramfs.conf
+$ echo "install freevxfs /bin/false" > /etc/modprobe.d/freevxfs.conf
+$ echo "install jffs2 /bin/false" > /etc/modprobe.d/jffs2.conf
+$ echo "install hfs /bin/false" > /etc/modprobe.d/hfs.conf
+$ echo "install hfsplus /bin/false" > /etc/modprobe.d/hfsplus.conf
+$ echo "install squashfs /bin/false" > /etc/modprobe.d/squashfs.conf
+$ echo "install udf /bin/false" > /etc/modprobe.d/udf.conf
 ```
 
 - Habilitar la protección de desbordamento de buffer
 ```
-echo "kernel.exec-shield = 1" >> /etc/sysctl.conf
-sysctl -w kernel.exec-shield=1
+$ echo "kernel.exec-shield = 1" >> /etc/sysctl.conf
+$ sysctl -w kernel.exec-shield=1
 ```
 
 - Habilitem el Address Space Layuot Randomization (ASLR) prevención de explotación de vulnerabilidades a memoria
 ```
-sysctl -q -n -w kernel.randomize_va_space=2
+$ sysctl -q -n -w kernel.randomize_va_space=2
 ```
