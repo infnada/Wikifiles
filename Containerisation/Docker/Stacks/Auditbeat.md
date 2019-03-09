@@ -2,13 +2,13 @@
 title: Auditbeat
 description: 
 published: true
-date: 2019-03-08T23:19:07.788Z
+date: 2019-03-09T18:23:07.324Z
 tags: 
 ---
 
 > Reemplazar `&#123;&#123;` por `{{` .... ya que sino no me renderiza correctamente este HTML
 
-```
+```yaml
 version: "3.6"
 
 # https://www.elastic.co/guide/en/beats/auditbeat/current/auditbeat-overview.html
@@ -65,7 +65,7 @@ configs:
 
 - auditbeat.yml
 
-```
+```yaml
 # https://github.com/elastic/beats/blob/master/filebeat/filebeat.reference.yml
 
 auditbeat.modules:
