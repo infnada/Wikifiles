@@ -2,11 +2,12 @@
 title: Kubeadm
 description: 
 published: true
-date: 2019-03-09T16:27:12.205Z
+date: 2019-03-09T16:28:23.279Z
 tags: 
 ---
 
 > https://github.com/kubernetes/kubeadm
+> https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 # Initialize Kubernetes Cluster
 
