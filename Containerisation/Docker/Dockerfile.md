@@ -1,11 +1,9 @@
 ---
-title: DockerFile
+title: Dockerfile
 description: 
 published: true
-date: 2019-03-08T17:58:33.564Z
+date: 2019-03-09T16:34:28.350Z
 tags: 
 ---
 
-# Header
-
-Your content here
+> File validator https://www.fromlatest.io/
