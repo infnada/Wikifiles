@@ -2,7 +2,7 @@
 title: Kubeadm
 description: 
 published: true
-date: 2019-03-09T16:29:33.526Z
+date: 2019-03-09T18:30:18.432Z
 tags: 
 ---
 
@@ -53,7 +53,7 @@ export KUBECONFIG=$HOME/admin.conf
 
 > For production, instead of externalIPs, it's recommended to use `kubectl proxy` to access the dashboard. See more details at https://github.com/kubernetes/dashboard. `$ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml`
 
-```
+```yaml
 vi dashboard.yaml
 ---
 # Copyright 2017 The Kubernetes Authors.
@@ -228,7 +228,7 @@ spec:
 - Create user to access the Dashboard
 
 > https://github.com/kubernetes/dashboard/wiki/Creating-sample-user
-```
+```yaml
 $1 cat &lt;&lt;EOF | kubectl create -f - 
 apiVersion: v1
 kind: ServiceAccount
