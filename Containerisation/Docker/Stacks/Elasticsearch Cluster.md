@@ -2,11 +2,11 @@
 title: Elasticsearch Cluster
 description: 
 published: true
-date: 2019-03-08T23:00:44.685Z
+date: 2019-03-09T18:23:12.395Z
 tags: 
 ---
 
-```
+```yaml
 version: '3.6'
 services:
   elasticsearch:
