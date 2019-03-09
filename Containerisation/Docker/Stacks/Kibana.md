@@ -2,11 +2,11 @@
 title: Kibana
 description: 
 published: true
-date: 2019-03-08T23:16:09.652Z
+date: 2019-03-09T18:23:58.080Z
 tags: 
 ---
 
-```
+```yaml
 version: '3.6'
 services:
   kibana:
