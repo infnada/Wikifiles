@@ -2,13 +2,16 @@
 title: Kubeadm
 description: 
 published: true
-date: 2019-03-09T13:04:51.520Z
+date: 2019-03-09T16:27:12.205Z
 tags: 
 ---
 
 > https://github.com/kubernetes/kubeadm
 
-- In production, it's recommend to exclude the token causing kubeadm to generate one on your behalf.
+# Initialize Kubernetes Cluster
+
+- In production, it's recommend to exclude the token causing kubeadm to generate one on your behalf. `$ kubeadm init`
+
 `1$ kubeadm init --token=102952.1a7dd4cc8d1f4cc5 --kubernetes-version $(kubeadm version -o short)`
 
 ```
@@ -17,22 +20,37 @@ sudo chown $(id -u):$(id -g) $HOME/admin.conf
 export KUBECONFIG=$HOME/admin.conf
 ```
 
+- Get Tokens list
+
 `1$ kubeadm token list`
 
-`2$ kubeadm join --discovery-token-unsafe-skip-ca-verification --token=102952.1a7dd4cc8d1f4cc5 172.17.0.19:6443`
+- Join as Worker
+
+`2$ kubeadm join --discovery-token-unsafe-skip-ca-verification --token=102952.1a7dd4cc8d1f4cc5 111.111.111.111:6443`
+
+- Get list of nodes
+
+> They will not be ready till Network is installed
 
 `1$ kubectl get nodes`
+
+- Install network, in this case `WeaveWorks`.
 
 > https://www.weave.works/docs/net/latest/kubernetes/kube-addon/
 
 `1$ kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 `1$ kubectl get pod -n kube-system`
+
+- Deploy a simple Pod
+
 `1$ kubectl create deployment http --image=katacoda/docker-http-server:latest`
 `1$ kubectl get pods`
 
 `2$ docker ps | grep docker-http-server`
 
-> `$ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml`
+- Deploy Kubernetes Dashboard Pod
+
+> For production, instead of externalIPs, it's recommended to use `kubectl proxy` to access the dashboard. See more details at https://github.com/kubernetes/dashboard. `$ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml`
 
 ```
 vi dashboard.yaml
@@ -195,7 +213,7 @@ metadata:
   namespace: kube-system
 spec:
   externalIPs:
-  - 172.17.0.32
+  - 111.111.111.111
   ports:
     - port: 8443
       targetPort: 8443
@@ -205,6 +223,8 @@ spec:
 
 `1$ kubectl apply -f dashboard.yaml`
 `1$ kubectl get pods -n kube-system`
+
+- Create user to access the Dashboard
 
 > https://github.com/kubernetes/dashboard/wiki/Creating-sample-user
 ```
@@ -230,6 +250,6 @@ subjects:
 EOF
 ```
 
-`1$ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')`
+- Get the user Token
 
-- For production, instead of externalIPs, it's recommended to use kubectl proxy to access the dashboard. See more details at https://github.com/kubernetes/dashboard.
+`1$ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')`
