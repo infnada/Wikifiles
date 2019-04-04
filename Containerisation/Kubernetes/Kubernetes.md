@@ -2,7 +2,7 @@
 title: Kubernetes
 description: 
 published: true
-date: 2019-03-09T18:29:36.415Z
+date: 2019-04-04T08:28:17.942Z
 tags: 
 ---
 
@@ -73,6 +73,9 @@ $ mkdir -p /etc/systemd/system/kubelet.service.d
 $ curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/10-kubeadm.conf" | sed "s:/usr/bin:/opt/bin:g" > /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 $ systemctl enable --now kubelet
 ```
+# Bash autocomplete
+
+https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion
 
 # Lanzar contenedores
 
