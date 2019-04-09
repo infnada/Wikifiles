@@ -1,6 +1,6 @@
 ---
 title: Elasticsearch + Logstash + Kibana
-description: 
+description: Elasticsearch + Logstash + Kibana
 published: true
 date: 2019-03-09T16:59:02.522Z
 tags: 
