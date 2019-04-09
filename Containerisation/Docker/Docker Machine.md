@@ -1,6 +1,6 @@
 ---
 title: Docker Machine
-description: 
+description: Docker Machine
 published: true
 date: 2019-03-09T17:08:01.368Z
 tags: 
