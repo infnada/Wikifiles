@@ -1,6 +1,6 @@
 ---
 title: Dockerfile
-description: 
+description: Dockerfile
 published: true
 date: 2019-03-09T16:41:00.406Z
 tags: 
