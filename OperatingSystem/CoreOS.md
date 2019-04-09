@@ -1,6 +1,6 @@
 ---
 title: CoreOS
-description: 
+description: CoreOS
 published: true
 date: 2019-03-08T19:26:38.722Z
 tags: 
