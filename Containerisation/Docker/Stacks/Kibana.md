@@ -1,6 +1,6 @@
 ---
 title: Kibana
-description: 
+description: Kibana
 published: true
 date: 2019-03-09T18:23:58.080Z
 tags: 
