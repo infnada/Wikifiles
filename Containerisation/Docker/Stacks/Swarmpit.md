@@ -1,6 +1,6 @@
 ---
 title: Swarmpit
-description: 
+description: Swarmpit
 published: true
 date: 2019-03-09T18:21:17.524Z
 tags: 
