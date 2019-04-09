@@ -1,6 +1,6 @@
 ---
 title: Docker Swarm
-description: 
+description: Docker Swarm
 published: true
 date: 2019-03-09T16:43:43.585Z
 tags: 
