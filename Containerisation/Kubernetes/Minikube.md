@@ -1,6 +1,6 @@
 ---
 title: Minikube
-description: 
+description: Minikube
 published: true
 date: 2019-03-09T11:17:51.078Z
 tags: 
