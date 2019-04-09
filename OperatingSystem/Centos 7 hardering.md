@@ -1,6 +1,6 @@
 ---
 title: Centos 7 hardering
-description: 
+description: Centos 7 hardering
 published: true
 date: 2019-03-09T17:25:04.126Z
 tags: 
