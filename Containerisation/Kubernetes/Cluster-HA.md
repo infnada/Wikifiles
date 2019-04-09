@@ -2,7 +2,7 @@
 title: Cluster HA
 description: Cluster HA
 published: true
-date: 2019-03-08T19:24:23.903Z
+date: 2019-04-09T13:45:41.245Z
 tags: 
 ---
 
