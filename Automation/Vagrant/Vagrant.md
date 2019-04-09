@@ -1,6 +1,6 @@
 ---
 title: Vagrant
-description: 
+description: Vagrant
 published: true
 date: 2019-03-08T20:12:32.403Z
 tags: 
