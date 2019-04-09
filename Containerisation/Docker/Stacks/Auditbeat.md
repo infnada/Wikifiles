@@ -1,6 +1,6 @@
 ---
 title: Auditbeat
-description: 
+description: Auditbeat
 published: true
 date: 2019-03-09T18:23:07.324Z
 tags: 
