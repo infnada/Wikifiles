@@ -1,6 +1,6 @@
 ---
 title: GP
-description: GP
+description: GrupoPacifico
 published: true
 date: 2019-03-09T20:20:01.165Z
 tags: 
