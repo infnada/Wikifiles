@@ -1,8 +1,8 @@
 ---
-title: Gitlab-CI
-description: Gitlab-CI
+title: Gitlab CI
+description: Gitlab CI
 published: true
-date: 2019-03-08T18:09:29.259Z
+date: 2019-04-09T13:39:38.015Z
 tags: 
 ---
 
