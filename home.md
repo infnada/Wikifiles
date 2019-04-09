@@ -1,6 +1,6 @@
 ---
 title: Home
-description: 
+description: Home
 published: true
 date: 2019-03-09T17:27:58.956Z
 tags: 
