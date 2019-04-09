@@ -1,6 +1,6 @@
 ---
 title: Elasticsearch Cluster
-description: 
+description: Elasticsearch Cluster
 published: true
 date: 2019-03-09T18:23:12.395Z
 tags: 
