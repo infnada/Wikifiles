@@ -1,6 +1,6 @@
 ---
 title: Stacks
-description: 
+description: Stacks
 published: true
 date: 2019-03-09T18:28:11.045Z
 tags: 
