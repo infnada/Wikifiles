@@ -1,6 +1,6 @@
 ---
 title: Kubeadm
-description: 
+description: Kubeadm
 published: true
 date: 2019-03-09T18:30:18.432Z
 tags: 
