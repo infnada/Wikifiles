@@ -2,7 +2,7 @@
 title: Kubeadm
 description: Kubeadm
 published: true
-date: 2019-03-09T18:30:18.432Z
+date: 2019-04-09T13:44:16.777Z
 tags: 
 ---
 
