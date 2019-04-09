@@ -1,6 +1,6 @@
 ---
 title: Weaveworks Scope
-description: 
+description: Weaveworks Scope
 published: true
 date: 2019-03-09T18:22:46.288Z
 tags: 
