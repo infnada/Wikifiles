@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-15T15:11:53.327Z
+date: 2019-04-15T15:14:27.889Z
 tags: 
 ---
 
@@ -74,9 +74,17 @@ Normally you would include one or more class declarations in this node block. A 
 In this case, use a resource type called `notify` that will display a message in the output of your Puppet run without making any changes to the system.
 
 ```
-$vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 ---
 node 'node_name' {
   notify { 'Hello Puppet!': }
 }
+```
+
+```
+$ puppet agent -t
+
+Notice: Hello Puppet!
+Notice: /Stage[main]/Main/Node[node_name]/Notify[Hello Puppet!]/message: defined 'message' as 'Hello Puppet!'
+Notice: Applied catalog in 0.45 seconds
 ```
