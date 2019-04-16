@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T13:39:46.651Z
+date: 2019-04-16T13:52:20.632Z
 tags: 
 ---
 
@@ -1025,3 +1025,98 @@ $ curl 'pasture-app-large.puppet.vm/api/v1/cowsay?message="HELLO!"'
 $ curl 'pasture-app-small.puppet.vm/api/v1/cowsay/sayings' (error because small app has no db)
 ```
 
+# Hiera
+
+Hiera is Puppet's data lookup system. Implementing Hiera in your Puppet infrastructure allows you to separate site-specific data from your Puppet code base. Hiera lookups in your Puppet code can then be used to intelligently set variables according to the specific details of each node where that code is applied.
+
+Hiera is Puppet's built-in data lookup system. It lets you complete this separation by moving data out of your Puppet manifests and into a separate data source.
+
+The first step in implementing Hiera is to add a hiera.yaml configuration file to your environment's code directory. This configuration file defines the levels in your hierarchy and tells Hiera where to find the data source that corresponds to each level.
+
+`$ cd /etc/puppetlabs/code/environments/production`
+
+```bash
+$ vi hiera.yaml
+---
+---
+version: 5
+
+defaults:
+  datadir: data
+  data_hash: yaml_data
+
+hierarchy:
+  - name: "Per-node data"
+    path: "nodes/%{trusted.certname}.yaml"
+
+  - name: "Per-domain data"
+    path: "domain/%{facts.networking.domain}.yaml" 
+
+  - name: "Common data"
+    path: "common.yaml"
+```
+
+When Puppet uses Hiera to look for a value, it searches according to the order of levels listed under this configuration file's `hierarchy:` section. If a value is found in a data source defined for the "Per-node data" level, that value is used. If no matching value is found there, Hiera tries the next level: in this case, "Per-domain defaults". Finally, if no value is found in the previous data sources, Hiera looks in the "Common data" level's `common.yaml` file.
+
+Before setting up your data sources for these levels, let's add our Hiera lookups to the `profile::pasture::app` class. By doing this first, we'll know which values the data sources need to define.
+
+Here, use the built-in Hiera lookup() function to tell Puppet to fetch data for each of the pasture component class parameters you want to manage.
+
+```bash
+$ vi modules/profile/manifests/pasture/app.pp
+---
+class profile::pasture::app {
+  class { 'pasture':
+    default_message   => lookup('profile::pasture::app::default_message'),
+    sinatra_server    => lookup('profile::pasture::app::sinatra_server'),
+    default_character => lookup('profile::pasture::app::default_character'),
+    db                => lookup('profile::pasture::app::db'),
+  }
+}
+```
+
+Note that these lookup keys include a fully qualified scope. Though Hiera itself doesn't require this naming pattern for these keys, this pattern allows anyone looking at a key in a data source to know exactly how and where it is used in Puppet code.
+
+(Hiera also has an implicit data binding feature which makes direct use of fully qualified keys to set class parameters without an explicit lookup. Because this feature can make the relationship between Puppet code and Hiera data less clear, however, the lookup() function is preferred, especially when members of your team are less familiar with Hiera.)
+
+Now that you've added lookup functions to your profile, it's time to define these data in your Hiera data sources.
+
+`$ mkdir -p data/{domain,nodes}`
+
+```bash
+$ vi data/common.yaml
+---
+---
+profile::pasture::app::default_message: "Baa"
+profile::pasture::app::sinatra_server: "thin"
+profile::pasture::app::default_character: "sheep"
+profile::pasture::app::db: "none"
+
+$ vi data/domain/beauvine.vm.yaml
+---
+---
+profile::pasture::app::default_message: "Welcome to Beauvine!"
+
+$ vi data/domain/auroch.vm.yaml
+---
+---
+profile::pasture::app::default_message: "Welcome to Auroch!"
+profile::pasture::app::db: "postgres://pasture:m00m00@pasture-db.auroch.vm/pasture"
+
+$ vi data/nodes/pasture-app-dragon.auroch.vm.yaml
+---
+---
+profile::pasture::app::default_character: 'dragon'
+```
+
+Your data directory should now look like the following:
+
+```bash
+data
+├── common.yaml
+├── domain
+│   ├── auroch.vm.yaml
+│   └── beauvine.vm.yaml
+└── nodes
+    └── pasture-app-dragon.auroch.vm.yaml
+```
