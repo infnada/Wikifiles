@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T09:24:19.011Z
+date: 2019-04-16T09:27:55.020Z
 tags: 
 ---
 
@@ -539,3 +539,26 @@ $ puppet parser validate pasture/manifests/init.pp
 ```
 
 To declare a class with specific parameters, use the resource-like class declaration. As the name suggests, the syntax for a resource-like class declaration is very similar to a resource declaration. It consists of the keyword class followed by a set of curly braces (`{...}`) containing the class name with a colon (`:`) and a list of parameters and values. Any values left out in this declaration are set to the defaults defined within the class, or `undef` if no default is set.
+
+```bash
+class { 'class_name':
+  parameter_one => value_one,
+  parameter_two => value_two,
+}
+```
+
+Unlike the `include` function, which can be used for the same class in multiple places, resource-like class declarations can only be used once per class. Because a class declared with the `include` uses defaults, it will always be parsed into the same set of resources in your catalog. This means that Puppet can safely handle multiple `include` calls for the same class. Because multiple resource-like class declarations are not guaranteed to lead to the same set of resources, Puppet has no unambiguous way to handle multiple resource-like declarations of the same class. Attempting to make multiple resource-like declarations of the same class will cause the Puppet parser to throw an error.
+
+```bash
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'pasture.puppet.vm' {
+  class { 'pasture':
+    default_character => 'cow',
+  }
+}
+
+$ puppet agent -t
+
+$ curl 'pasture.puppet.vm/api/v1/cowsay?message=Hello!'
+```
