@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T08:46:44.277Z
+date: 2019-04-16T09:03:30.678Z
 tags: 
 ---
 
@@ -357,6 +357,118 @@ Once you have defined a variable, you can use it anywhere in your manifest where
 
 Technically, Puppet variables are actually *constants* from the perspective of the Puppet parser as it parses your Puppet code to create a catalog. Once a variable is assigned, the value is fixed and cannot be changed. The *variability*, here, refers to the fact that a variable can have a different value set across different Puppet runs or across different systems in your infrastructure.
 
-```
+```bash
 $ vi pasture/manifests/init.pp
+---
+class pasture {
+
+  $port                = '80'
+  $default_character   = 'sheep'
+  $default_message     = ''
+  $pasture_config_file = '/etc/pasture_config.yaml'
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+    before   => File[$pasture_config_file],
+  }
+  file { $pasture_config_file:
+    source  => 'puppet:///modules/pasture/pasture_config.yaml',
+    notify  => Service['pasture'],
+  }
+  file { '/etc/systemd/system/pasture.service':
+    source => 'puppet:///modules/pasture/pasture.service',
+    notify  => Service['pasture'],
+  }
+  service { 'pasture':
+    ensure    => running,
+  }
+}
 ```
+
+# Templates
+
+Many of the tasks involved in system configuration and administration come down to managing the content of text files. The most direct way to handle this is through a templating language. A template is similar to a text file but offers a syntax for inserting variables as well as some more advanced language features like conditionals and iteration. This flexibility lets you manage a wide variety of file formats with a single tool.
+
+Puppet supports two templating languages, Embedded Puppet (EPP) and Embedded Ruby (ERB).
+
+```bash
+$ mkdir pasture/templates
+$ vi pasture/templates/pasture_config.yaml.epp
+---
+<%- | $port,
+      $default_character,
+      $default_message,
+| -%>
+# This file is managed by Puppet. Please do not make manual changes.
+---
+:default_character: <%= $default_character %>
+:default_message:   <%= $default_message %>
+:sinatra_settings:
+  :port: <%= $port %>
+```
+
+The bars (`|`) surrounding the list of parameters are a special syntax that define the parameters tag. The `<%` and `%>` are the opening and closing tag delimiters that distinguish EPP tags from the body of the file. Those hyphens (`-`) next to the tag delimiters will remove indentation and whitespace before and after the tag. This allows you to put this parameter tag at the beginning of the file, for example, without the newline character after the tag creating an empty line at the beginning of the output file.
+
+Now that that's set, we can repeat the process for the service unit file.
+
+```bash
+$ cp pasture/files/pasture.service pasture/templates/pasture.service.epp
+$ vi pasture/templates/pasture.service.epp
+---
+<%- | $pasture_config_file = '/etc/pasture_config.yaml' | -%>
+# This file is managed by Puppet. Please do not make manual changes.
+[Unit]
+Description=Run the pasture service
+
+[Service]
+Environment=RACK_ENV=production
+ExecStart=/usr/local/bin/pasture start --config_file <%= $pasture_config_file %>
+
+[Install]
+WantedBy=multi-user.target
+```
+And modify the file resource for your service unit file to use the template you just created.
+
+```bash
+$ vi pasture/manifests/init.pp
+---
+class pasture {
+
+  $port                = '80'
+  $default_character   = 'sheep'
+  $default_message     = ''
+  $pasture_config_file = '/etc/pasture_config.yaml'
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+    before   => File[$pasture_config_file],
+  }
+  $pasture_config_hash = {
+    'port'              => $port,
+    'default_character' => $default_character,
+    'default_message'   => $default_message,
+  }
+  file { $pasture_config_file:
+    content => epp('pasture/pasture_config.yaml.epp', $pasture_config_hash),
+    notify  => Service['pasture'],
+  }
+  $pasture_service_hash = {
+    'pasture_config_file' => $pasture_config_file,
+  }
+  file { '/etc/systemd/system/pasture.service':
+    content => epp('pasture/pasture.service.epp', $pasture_service_hash),
+    notify  => Service['pasture'],
+  }
+  service { 'pasture':
+    ensure    => running,
+  }
+}
+```
+
+The `<%= ... %>` tags we use to insert our variables into the file are called expression-printing tags. These tags insert the content of a Puppet expression, in this case the string values assigned to our variables.
+
+The `epp()` function takes two arguments: First, a file reference in the format `'<MODULE>/<TEMPLATE_NAME>'` that specifies the template file to use. Second, a hash of variable names and values to pass to the template.
+
+To avoid cramming all our variables into the `epp()` function, we'll put them in a variable called `$pasture_config_hash` just before the file resource.
