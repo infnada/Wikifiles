@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T07:37:48.756Z
+date: 2019-04-16T07:54:43.665Z
 tags: 
 ---
 
@@ -10,21 +10,21 @@ tags:
 
 Bolt provides a command-line interface for running commands, scripts, tasks and plans on the local machine or remote nodes.
 
-```
+```bash
 $ rpm -Uvh https://yum.puppet.com/puppet6/puppet6-release-el-7.noarch.rpm
 $ yum install puppet-bolt
 ```
 
 ## Run commands with bolt
 
-```
+```bash
 $ bolt command run 'free -th' --nodes localhost
 $ bolt --format json command run 'cat /etc/hosts' --nodes localhost
 ```
 
 ## Install Puppet agent with bolt
 
-```
+```bash
 $ bolt command run "sh -c 'curl -k https://learning.puppetlabs.vm:8140/packages/current/install.bash | sudo bash'" --nodes localhost
 ```
 
@@ -37,26 +37,26 @@ The term Puppet is often used as a shorthand for a collection of tools and servi
 Using Puppet, you define a desired state for all systems in your infrastructure. Once this state is defined, it automates the process of bringing your systems into that state and keeping them there.
 
 ## Check if resource (file) exists
-```
+```bash
 $ puppet resource file /tmp/test
 $ touch /tmp/test
 $ puppet resource file /tmp/test
 ```
 
 ## Put contents into a file (development)
-```
+```bash
 $ sudo puppet resource file /tmp/test content='Hello Puppet!'
 ```
 
 ## Check if resource (package) exists
-```
+```bash
 $ puppet resource package httpd
 $ puppet resource package httpd ensure=present
 ```
 
 # Sign agent certificate
 
-```
+```bash
 $1 puppet agent -t
 $2 puppetserver ca list
 $2 puppetserver ca sign --certname some_cert_name
@@ -77,7 +77,7 @@ Normally you would include one or more class declarations in this node block. A 
 
 In this case, use a resource type called `notify` that will display a message in the output of your Puppet run without making any changes to the system.
 
-```
+```bash
 $ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 ---
 node 'node_name' {
@@ -85,7 +85,7 @@ node 'node_name' {
 }
 ```
 
-```
+```bash
 $ puppet agent -t
 
 Notice: Hello Puppet!
@@ -94,7 +94,7 @@ Notice: Applied catalog in 0.45 seconds
 ```
 
 ### Example simple manifest
-```
+```bash
 $ vi /tmp/hello.pp
 ---
 notify { 'Hello Puppet!': }
@@ -112,7 +112,7 @@ A module is a directory structure that lets Puppet keep track of where to find t
 
 To see what your configured modulepath is, run the following command:
 
-```
+```bash
 $ puppet config print modulepath
 
 /etc/puppetlabs/code/environments/production/modules:/etc/puppetlabs/code/modules:/opt/puppetlabs/puppet/modules
@@ -126,7 +126,7 @@ In a real production environment, however, you would likely want to keep your Pu
 
 You might be wondering why we're calling it init.pp instead of cowsay.pp. Most modules contain a main class like this whose name corresponds with the name of the module itself. This main class is always kept in a manifest with the special name init.pp.
 
-```
+```bash
 $ cd /etc/puppetlabs/code/environments/production/modules
 $ mkdir -p cowsay/manifests
 $ vi cowsay/manifests/init.pp
@@ -143,7 +143,7 @@ $ puppet parser validate cowsay/manifests/init.pp
 
 Apply the class to a node:
 
-```
+```bash
 $ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 ---
 node 'node_name' {
@@ -167,7 +167,7 @@ Now you can try out your newly installed cowsay command:
 
 A module often includes multiple components that work together to serve a single function.
 
-```
+```bash
 $ vi cowsay/manifests/fortune.pp
 ---
 class cowsay::fortune {
@@ -183,7 +183,7 @@ We could use another include statement in the `site.pp` manifest to classify `no
 
 In this case, use a class declaration to pull the `cowsay::fortune` class into our main `cowsay` class.
 
-```
+```bash
 $ vi cowsay/manifests/init.pp
 ---
 class cowsay {
@@ -201,3 +201,71 @@ $ puppet agent -t
 $ fortune | cowsay
 ```
 
+# The package, file, service pattern
+
+The `package`, `file`, and `service` resource types are used in concert often enough that we talk about them together as the "package, file, service" pattern. A package resource manages the software package itself, a file resource allows you to customize a related configuration file, and a service resource starts the service provided by the software you've just installed and configured.
+
+## Package
+
+```bash
+$ cd /etc/puppetlabs/code/environments/production/modules
+$ mkdir -p pasture/{manifests,files}
+$ vi pasture/manifests/init.pp
+---
+class pasture {
+  package { 'pasture':
+    ensure   => present,
+    provider => gem,
+  }
+}
+
+$ puppet parser validate pasture/manifests/init.pp
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'node_name' {
+  include pasture
+}
+
+$ puppet agent -t
+$ pasture start &
+$ curl 'localhost:4567/api/v1/cowsay?message=Hello!'
+$ curl 'localhost:4567/api/v1/cowsay?message=Hello!&character=elephant'
+```
+
+## File
+
+Packages you install with Puppet often have configuration files that let you customize their behavior.
+
+```
+vi pasture/files/pasture_config.yaml
+---
+:default_character: elephant
+```
+
+The `file` resource takes a `source` parameter, which allows you to specify a source file that will define the content of the managed file. As its value, this parameter takes a URI. While it's possible to point to other locations, you'll typically use this to specify a file in your module's '`files` directory. Puppet uses a shortened URI format that begins with the `puppet:` prefix to refer to these module files kept on your Puppet master. This format follows the pattern `puppet:///modules/<MODULE NAME>/<FILE PATH>`. Notice the triple forward slash just after `puppet:`. This stands in for the implied path to the modules on your Puppet master.
+
+```
+$ vi pasture/manifests/init.pp
+---
+class pasture {
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+  }
+
+  file { '/etc/pasture_config.yaml':
+    source => 'puppet:///modules/pasture/pasture_config.yaml',
+  }
+}
+
+$ puppet parser validate pasture/manifests/init.pp
+```
+
+## Service
+
+Because our agent node is running CentOS 7, we'll use the `systemd` service manager to handle our Pasture process. Although some packages set up their own service unit files, Pasture does not. It's easy enough to use a file resource to create your own. This service unit file will tell systemd how and when to start our Pasture application.
+
+```
+$ vi pasture/files/pasture.service
+```
