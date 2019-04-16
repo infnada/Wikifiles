@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T09:28:12.239Z
+date: 2019-04-16T09:53:22.551Z
 tags: 
 ---
 
@@ -561,4 +561,65 @@ node 'pasture.puppet.vm' {
 $ puppet agent -t
 
 $ curl 'pasture.puppet.vm/api/v1/cowsay?message=Hello!'
+```
+
+# Facts
+
+```bash
+$ facter -p | less
+$ facter -p os
+$ facter -p os.family
+```
+
+All facts are automatically made available within your manifests. You can access the value of any fact via the `$facts` hash, following the `$facts['fact_name']` syntax. To access structured facts, you can chain more names using the same bracket indexing syntax. For example, the `os.family` fact you accessed above is available within a manifest as `$facts['os']['family']`.
+
+From your `modules` directory, create the directory structure for a module called `motd`. You'll need two subdirectories called `manifests` and `templates`.
+
+`$ mkdir -p motd/{manifests,templates}`
+
+Begin by creating an init.pp manifest to contain the main motd class.
+
+```bash
+$ vi motd/manifests/init.pp
+---
+class motd {
+
+  $motd_hash = {
+    'fqdn'       => $facts['networking']['fqdn'],
+    'os_family'  => $facts['os']['family'],
+    'os_name'    => $facts['os']['name'],
+    'os_release' => $facts['os']['release']['full'],
+  }
+
+  file { '/etc/motd':
+    content => epp('motd/motd.epp', $motd_hash),
+  }
+
+}
+```
+
+The `$facts` hash and top-level (unstructured) facts are automatically loaded as variables into any template. To improve readability and reliability, we strongly suggest using the method shown here. Be aware, however, that you will likely encounter templates that refer directly to facts using the general variable syntax rather than the `$facts` hash syntax we suggest here.
+
+```bash
+$ vi motd/templates/motd.epp
+---
+<%- | $fqdn,
+      $os_family,
+      $os_name,
+      $os_release,
+| -%>
+Welcome to <%= $fqdn %>
+
+This is a <%= $os_family %> system running <%= $os_name %> <%= $os_release %>
+
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'pasture.puppet.vm' {
+  include motd
+  class { 'pasture':
+    default_character => 'cow',
+  }
+}
+
+$ puppet agent -t
 ```
