@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T13:52:20.632Z
+date: 2019-04-16T13:55:05.499Z
 tags: 
 ---
 
@@ -1119,4 +1119,16 @@ data
 │   └── beauvine.vm.yaml
 └── nodes
     └── pasture-app-dragon.auroch.vm.yaml
+```
+
+Next you will use the `puppet job` tool to trigger a puppet agent run on each of these nodes.
+
+`$ puppet job run --nodes pasture-db.auroch.vm,pasture-app-dragon.auroch.vm,pasture-app.auroch.vm,pasture-app.beauvine.vm --concurrency 2`
+
+```bash
+$ curl pasture-app-dragon.auroch.vm/api/v1/cowsay/sayings
+$ curl -X POST 'pasture-app-dragon.auroch.vm/api/v1/cowsay/sayings?message=Hello!'
+$ curl pasture-app-dragon.auroch.vm/api/v1/cowsay/sayings/1
+$ curl pasture-app.auroch.vm/api/v1/cowsay/sayings/1
+$ curl pasture-app.beauvine.vm/api/v1/cowsay
 ```
