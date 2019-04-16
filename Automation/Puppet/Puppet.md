@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T08:02:13.300Z
+date: 2019-04-16T08:02:59.690Z
 tags: 
 ---
 
@@ -343,4 +343,6 @@ class pasture {
 $ puppet parser validate pasture/manifests/init.pp
 
 $ puppet agent -t
+
+$ curl 'node_name:4567/api/v1/cowsay?message=Hello!'
 ```
