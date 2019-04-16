@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T13:55:05.499Z
+date: 2019-04-16T15:29:16.723Z
 tags: 
 ---
 
@@ -1131,4 +1131,161 @@ $ curl -X POST 'pasture-app-dragon.auroch.vm/api/v1/cowsay/sayings?message=Hello
 $ curl pasture-app-dragon.auroch.vm/api/v1/cowsay/sayings/1
 $ curl pasture-app.auroch.vm/api/v1/cowsay/sayings/1
 $ curl pasture-app.beauvine.vm/api/v1/cowsay
+```
+
+# Defined resource types
+
+As we noted in discussions of classes earlier in this guide, Puppet's classes are singleton. In other words, classes in the Puppet language can only exist once within a given catalog, and writing Puppet code that declares a class twice will result in a compilation error. For many system components, there is a natural fit between this idea of a singleton class and a single instance or installation of the class's managed component on the node. For example, an Apache server will generally run only a single instance of an `httpd` service and have one set of configuration files. In this case, Puppet's singleton classes ensure that you don't have multiple conflicting specifications for how a corresponding component should be configured.
+
+In some cases, however, this one-to-one correspondence doesn't hold. A single Apache `httpd` process may serve multiple virtual hosts, for example.
+
+> A defined resource type is a block of Puppet code that can be evaluated multiple times within a single node's catalog.
+
+The syntax to create a defined resource type is very similar to the syntax you would use to define a class. Rather than using the `class` keyword, however, you use `define` to begin the code block.
+
+```bash
+define defined_type_name (
+  parameter_one = default_value,
+  parameter_two = default_value,
+){
+  ...
+}
+```
+
+Once it's defined, you can use a defined resource type by declaring it like you would any other resource type.
+
+```bash
+defined_type_name { 'title':
+  parameter_one => 'foo',
+  parameter_two => 'bar',
+}
+```
+
+A resource's *title* is the unique identifier Puppet user internally to keep track of that resource.
+A resource's *namevar* is the parameter that specifies the unique aspect on the target system that the resource manages.
+
+## Managing user accounts
+
+```bash
+$ cd /etc/puppetlabs/code/environments/production/modules
+$ mkdir -p user_accounts/manifests
+```
+
+```bash
+$ vi user_accounts/manifests/ssh_user.pp
+---
+define user_accounts::ssh_user (
+  $pub_key,
+  $group   = undef,
+  $shell   = undef,
+  $comment = undef,
+){
+  ssh_authorized_key { "${title}@puppet.vm":
+    ensure => present,
+    user   => $title,
+    type   => 'ssh-rsa',
+    key    => $pub_key,
+  }
+  file { "/home/${title}/.ssh":
+    ensure => directory,
+    owner  => $title,
+    group  => $title,
+    mode   => '0700',
+    before => Ssh_authorized_key["${title}@puppet.vm"],
+  }
+  user { $title:
+    ensure  => present,
+    groups  => $group,
+    shell   => $shell,
+    home    => "/home/${title}",
+    comment => $comment,
+  }
+  file { "/home/${title}":
+    ensure => directory,
+    owner  => $title,
+    group  => $title,
+    mode   => '0755',
+  }
+}
+```
+
+Note that the `$pub_key` parameter has no default value, while the default values for the other parameters are set to 'undef'. There is an important difference here.
+
+A parameter with no supplied default value is required.
+
+You may have noticed another new element of syntax into this code. Some of the double-quoted strings (`"..."`) in this manifest include variables in the `${var_name}` format. This is Puppet's string interpolation syntax. String interpolation allows you to insert a variable into any double-quoted string.
+
+Rather than place this directly in your `site.pp` manifest, as you might have before we introduced the roles and profiles pattern, we'll create a `pasture_dev_users` profile class, and use a Hiera lookup to programmatically create users as needed on each system in your infrastructure.
+
+`$ cd /etc/puppetlabs/code/environments/production/`
+
+```bash
+$ vi data/domain/beauvine.vm.yaml
+---
+---
+profile::pasture::app::default_message: "Welcome to Beauvine!"
+profile::base::dev_users::users:
+  - title: 'inavarro'
+    comment: 'Isart Navarro'
+    pub_key: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQDUXVg3uuFsliSLNlKi6K8nH7py4qu3VOch4o3zfGZN
+YOSIdiUCVRUgV5CVYdDGps/UrmHVFa/qK4elLGvDmNtuAKnSsHcICUJbmGkaA36b0LipHazbLmrUEpNt7y
+srtK0oqNayHGld9hKdSHerynP0IHNKEGyxqg+gB3W+KyeADIF4TgUczdgo0ZEA912F5wmP44TZsQCCj3YR
+jspoJ8L734TVX+aSL3u2xxNDtli7PHs45LiGMIUlCy+/qKFbVUQrtnhy9GH5Tvb0D+g7TtTyRYJSr1C3Gu
+T/mwbvCWZdCLWLwKJTfsDa7tNP6bZmpSELxdop4TKIzem5PzZ5dLaV
+/'
+  - title: 'user_two'
+    comment: 'User Two'
+   pub_key: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQDUXVg3uuFsliSLNlKi6K8nH7py4qu3VOch4o3zfGZN
+YOSIdiUCVRUgV5CVYdDGps/UrmHVFa/qK4elLGvDmNtuAKnSsHcICUJbmGkaA36b0LipHazbLmrUEpNt7y
+srtK0oqNayHGld9hKdSHerynP0IHNKEGyxqg+gB3W+KyeADIF4TgUczdgo0ZEA912F5wmP44TZsQCCj3YR
+jspoJ8L734TVX+aSL3u2xxNDtli7PHs45LiGMIUlCy+/qKFbVUQrtnhy9GH5Tvb0D+g7TtTyRYJSr1C3Gu
+T/mwbvCWZdCLWLwKJTfsDa7tNP6bZmpSELxdop4TKIzem5PzZ5dLaV
+/'
+```
+
+We'll also change the `common.yaml` data source to set a default for this key. In this case, we'll set the value to an empty list. This way, when Hiera tries to look up this value on a node outside of the `beauvine.vm` domain, it will still get a valid result.
+
+```bash
+$ vi data/common.yaml
+---
+---
+profile::pasture::app::default_message: "Baa"
+profile::pasture::app::sinatra_server: "thin"
+profile::pasture::app::default_character: "sheep"
+profile::pasture::app::db: "none"
+profile::base::dev_users::users: []
+```
+
+Now that this data is available in Hiera, create a `dev_users.pp` manifest in `profile/manifests/base/`.
+
+Here, we'll use a Puppet language feature called an iterator. An iterator allows you to repeat a block of Puppet code multiple times, using data from a hash or array to bind different values to the variables in the block for each iteration. In this case, the iterator goes through a list of users accounts defined in your Hiera data source and declares an instance of the `user_accounts::ssh_user` defined resource type for each.
+
+```bash
+$ vi /etc/puppetlabs/code/environments/production/modules/profile/manifests/base/dev_users.pp
+---
+class profile::base::dev_users {
+  lookup(profile::base::dev_users::users).each |$user| {
+    user_accounts::ssh_user { $user['title']:
+        comment => $user['comment'],
+        pub_key => $user['pub_key'],
+    }
+  }
+}
+```
+
+With this `profile::base::dev_users` class is set up, add it to the `role::pasture_app` class.
+
+```bash
+$ vi /etc/puppetlabs/code/environments/production/modules/role/manifests/pasture_app.pp
+---
+class role::pasture_app {
+  include profile::pasture::app
+  include profile::base::dev_users
+  include profile::base::motd
+}
+```
+
+```bash
+$ puppet job run --nodes pasture-app.beauvine.vm
+$ ssh inavarro@pasture-app.beauvine.vm
 ```
