@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T12:25:24.145Z
+date: 2019-04-16T12:35:10.686Z
 tags: 
 ---
 
@@ -767,4 +767,56 @@ $ puppet access login --lifetime 1d
 $ puppet job run --nodes node_dev,node_prod
 $ curl 'node_dev.puppet.vm/api/v1/cowsay?message=Hello!'
 $ curl 'node_prod.puppet.vm/api/v1/cowsay?message=Hello!'
+```
+
+# The Forge
+
+The Puppet Forge is a public repository for Puppet modules. The Forge gives you access to community maintained modules. Using existing modules from the Forge allows you to manage a wide variety of applications and systems without spending extensive time on custom module development. Furthermore, because many Forge modules are actively used and maintained by the Puppet community, you'll be working with code that's already well reviewed and tested.
+
+## Install from Forge
+
+```bash
+$ puppet module install puppetlabs-postgresql
+$ ls /etc/puppetlabs/code/environments/production/modules
+
+$ puppet module list
+```
+
+# Writing a wrapper class
+
+Using the existing `postgresql` module, you can add a database component to the Pasture module without having to reinvent the Puppet code needed to manage a PostgreSQL server and database instance. Instead, we'll create what's called a *wrapper* class to declare classes from the `postgresql` module.
+
+We'll call this wrapper class `pasture::db` and define it in a `db.pp` manifest in the `pasture` module's `manifests` directory.
+
+```bash
+$ vi pasture/manifests/db.pp
+---
+class pasture::db {
+
+  class { 'postgresql::server':
+    listen_addresses => '*',
+  }
+
+  postgresql::server::db { 'pasture':
+    user     => 'pasture',
+    password => postgresql_password('pasture', 'm00m00'),
+  }
+
+  postgresql::server::pg_hba_rule { 'allow pasture app access':
+    type        => 'host',
+    database    => 'pasture',
+    user        => 'pasture',
+    address     => '172.18.0.2/24',
+    auth_method => 'password',
+  }
+
+}
+
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'db_node' {
+  include pasture::db
+}
+
+$ puppet job run --nodes db_node
 ```
