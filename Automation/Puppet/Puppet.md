@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T09:13:22.822Z
+date: 2019-04-16T09:24:19.011Z
 tags: 
 ---
 
@@ -477,3 +477,65 @@ The `<%= ... %>` tags we use to insert our variables into the file are called ex
 The `epp()` function takes two arguments: First, a file reference in the format `'<MODULE>/<TEMPLATE_NAME>'` that specifies the template file to use. Second, a hash of variable names and values to pass to the template.
 
 To avoid cramming all our variables into the `epp()` function, we'll put them in a variable called `$pasture_config_hash` just before the file resource.
+
+# Writing a parameterized class
+
+A class's parameters are defined as a comma-separated list of parameter name and default value pairs (`$parameter_name = default_value,`). These parameter value pairs are enclosed in parentheses (`(...)`) between the class name and the opening curly bracket (`{`) that begins the body of the class. For readability, multiple parameters should be listed one per line, for example:
+
+```bash
+class class_name (
+  $parameter_one = default_value_one,
+  $parameter_two = default_value_two,
+){
+ ...
+}
+```
+
+Your parameter list will replace the variables assignments you used in the previous quest. By setting the parameter defaults to the same values you had assigned to those variables, you can maintain the same default behavior for the class.
+
+```bash
+$ vi pasture/manifests/init.pp
+---
+class pasture (
+  $port                = '80',
+  $default_character   = 'sheep',
+  $default_message     = '',
+  $pasture_config_file = '/etc/pasture_config.yaml',
+){
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+    before   => File[$pasture_config_file],
+  }
+
+  $pasture_config_hash = {
+    'port'              => $port,
+    'default_character' => $default_character,
+    'default_message'   => $default_message,
+  }
+
+  file { $pasture_config_file:
+    content => epp('pasture/pasture_config.yaml.epp', $pasture_config_hash),
+    notify  => Service['pasture'],
+  }
+
+  $pasture_service_hash = {
+    'pasture_config_file' => $pasture_config_file,
+  }
+
+  file { '/etc/systemd/system/pasture.service':
+    content => epp('pasture/pasture.service.epp', $pasture_service_hash),
+    notify  => Service['pasture'],
+  }
+
+  service { 'pasture':
+    ensure    => running,
+  }
+
+}
+
+$ puppet parser validate pasture/manifests/init.pp
+```
+
+To declare a class with specific parameters, use the resource-like class declaration. As the name suggests, the syntax for a resource-like class declaration is very similar to a resource declaration. It consists of the keyword class followed by a set of curly braces (`{...}`) containing the class name with a colon (`:`) and a list of parameters and values. Any values left out in this declaration are set to the defaults defined within the class, or `undef` if no default is set.
