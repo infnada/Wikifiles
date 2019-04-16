@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T12:42:53.915Z
+date: 2019-04-16T12:47:02.643Z
 tags: 
 ---
 
@@ -469,7 +469,7 @@ class pasture {
 $ puppet parser validate pasture/manifests/init.pp
 $ puppet agent -t
 
-$ curl 'pasture.puppet.vm/api/v1/cowsay?message=Hello!'
+$ curl 'node_name/api/v1/cowsay?message=Hello!'
 ```
 
 The `<%= ... %>` tags we use to insert our variables into the file are called expression-printing tags. These tags insert the content of a Puppet expression, in this case the string values assigned to our variables.
@@ -552,7 +552,7 @@ Unlike the `include` function, which can be used for the same class in multiple 
 ```bash
 $ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 ---
-node 'pasture.puppet.vm' {
+node 'node_name' {
   class { 'pasture':
     default_character => 'cow',
   }
@@ -560,7 +560,7 @@ node 'pasture.puppet.vm' {
 
 $ puppet agent -t
 
-$ curl 'pasture.puppet.vm/api/v1/cowsay?message=Hello!'
+$ curl 'node_name/api/v1/cowsay?message=Hello!'
 ```
 
 # Facts
@@ -614,7 +614,7 @@ This is a <%= $os_family %> system running <%= $os_name %> <%= $os_release %>
 
 $ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 ---
-node 'pasture.puppet.vm' {
+node 'node_name' {
   include motd
   class { 'pasture':
     default_character => 'cow',
@@ -765,8 +765,8 @@ node 'node_prod' {
 ```bash
 $ puppet access login --lifetime 1d
 $ puppet job run --nodes node_dev,node_prod
-$ curl 'node_dev.puppet.vm/api/v1/cowsay?message=Hello!'
-$ curl 'node_prod.puppet.vm/api/v1/cowsay?message=Hello!'
+$ curl 'node_dev/api/v1/cowsay?message=Hello!'
+$ curl 'node_prod/api/v1/cowsay?message=Hello!'
 ```
 
 # The Forge
@@ -910,9 +910,12 @@ $ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 node 'node_prod' {
   class { 'pasture':
     sinatra_server => 'thin',
-    db             => 'postgres://pasture:m00m00@pasture-db.puppet.vm/pasture',
+    db             => 'postgres://pasture:m00m00@db_node/pasture',
   }
 }
 
 $ puppet job run --nodes node_prod
+$ curl -X POST 'node_prod/api/v1/cowsay/sayings?message=Hello!'
+$ curl 'node_prod/api/v1/cowsay/sayings'
+$ curl 'node_prod/api/v1/cowsay/sayings/1'
 ```
