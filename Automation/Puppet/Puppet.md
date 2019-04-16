@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T12:38:52.938Z
+date: 2019-04-16T12:42:53.915Z
 tags: 
 ---
 
@@ -880,3 +880,39 @@ class pasture (
 ```
 
 Next, edit the `pasture_config.yaml.epp` template. We'll use a conditional statement to only include the `:db:` setting if there is a value other than `none` set for the `$db` variable.
+
+```bash
+$ vi pasture/templates/pasture_config.yaml.epp
+---
+<%- | $port,
+      $default_character,
+      $default_message,
+      $sinatra_server,
+      $db,
+| -%>
+# This file is managed by Puppet. Please do not make manual changes.
+---
+:default_character: <%= $default_character %>
+:default_message: <%= $default_message %>
+<%- if $db != 'none' { -%>
+:db: <%= $db %>
+<%- } -%>
+:sinatra_settings:
+  :port:   <%= $port %>
+  :server: <%= $sinatra_server %>
+```
+
+Now that you've set up this `db` parameter, edit your `node_prod` node definition.
+
+```bash
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'node_prod' {
+  class { 'pasture':
+    sinatra_server => 'thin',
+    db             => 'postgres://pasture:m00m00@pasture-db.puppet.vm/pasture',
+  }
+}
+
+$ puppet job run --nodes node_prod
+```
