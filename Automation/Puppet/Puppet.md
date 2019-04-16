@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T07:35:52.053Z
+date: 2019-04-16T07:37:48.756Z
 tags: 
 ---
 
@@ -195,5 +195,9 @@ class cowsay {
 }
 
 $ puppet parser validate cowsay/manifests/init.pp
+
+$ puppet agent -t --noop
+$ puppet agent -t
+$ fortune | cowsay
 ```
 
