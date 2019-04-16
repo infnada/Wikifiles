@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T07:54:43.665Z
+date: 2019-04-16T08:02:13.300Z
 tags: 
 ---
 
@@ -266,6 +266,81 @@ $ puppet parser validate pasture/manifests/init.pp
 
 Because our agent node is running CentOS 7, we'll use the `systemd` service manager to handle our Pasture process. Although some packages set up their own service unit files, Pasture does not. It's easy enough to use a file resource to create your own. This service unit file will tell systemd how and when to start our Pasture application.
 
-```
+```bash
 $ vi pasture/files/pasture.service
+---
+[Unit]
+Description=Run the pasture service
+
+[Service]
+Environment=RACK_ENV=production
+ExecStart=/usr/local/bin/pasture start
+
+[Install]
+WantedBy=multi-user.target
+
+$ vi pasture/manifests/init.pp
+---
+class pasture {
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+  }
+
+  file { '/etc/pasture_config.yaml':
+    source => 'puppet:///modules/pasture/pasture_config.yaml',
+  }
+
+  file { '/etc/systemd/system/pasture.service':
+    source => 'puppet:///modules/pasture/pasture.service',
+  }
+
+  service { 'pasture':
+    ensure => running,
+  }
+
+}
+
+$ puppet parser validate pasture/manifests/init.pp
+```
+
+## Resource ordering
+
+We need a way to ensure that the resources defined in this class are managed in the correct order. The "package, file, service" pattern describes the common dependency relationships among these resources: we want to install a package, write a configuration file, and start a service, in that order. Furthermore, if we make changes to the configuration file later, we want Puppet to restart our service so it can pick up those changes.
+
+For our class, we'll use two relationship metaparameters: `before` and `notify`. `before` tells Puppet that the current resource must come before the target resource. The `notify` metaparameter is like `before`, but if the target resource is a service, it has the additional effect of restarting the service whenever Puppet modifies the resource with the metaparameter set.
+
+Relationship metaparameters take a resource reference as a value. This resource reference points to another resource in your Puppet code. The syntax for a resource reference is the capitalized resource type, followed by square brackets containing the resource title: `Type['title']`.
+
+```bash
+$ vi pasture/manifests/init.pp
+---
+class pasture {
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+    before   => File['/etc/pasture_config.yaml'],
+  }
+
+  file { '/etc/pasture_config.yaml':
+    source  => 'puppet:///modules/pasture/pasture_config.yaml',
+    notify  => Service['pasture'],
+  }
+
+  file { '/etc/systemd/system/pasture.service':
+    source  => 'puppet:///modules/pasture/pasture.service',
+    notify  => Service['pasture'],
+  }
+
+  service { 'pasture':
+    ensure => running,
+  }
+
+}
+
+$ puppet parser validate pasture/manifests/init.pp
+
+$ puppet agent -t
 ```
