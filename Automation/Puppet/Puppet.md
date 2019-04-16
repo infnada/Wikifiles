@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T13:07:09.919Z
+date: 2019-04-16T13:16:25.016Z
 tags: 
 ---
 
@@ -980,3 +980,43 @@ A role combines profiles to define the full set of components you want Puppet to
 A role's name should be a simple description of the business purpose of the system it describes. Specific implementation details related to the technology stack are left to the profiles. For example, `role::myapp_webserver` and `role::myapp_database` are appropriate names for role classes, while `role::postgres_db` or `role::apache_server` are not.
 
 `$ mkdir -p role/manifests`
+
+```bash
+$ vi role/manifests/pasture_app.pp
+---
+class role::pasture_app {
+  include profile::pasture::app
+  include profile::base::motd
+}
+
+$ vi role/manifests/pasture_db.pp
+---
+class role::pasture_db {
+  include profile::pasture::db
+  include profile::base::motd
+}
+```
+
+## Classification
+
+```bash
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node default {
+  # This is where you can declare classes for all nodes.
+  # Example:
+  #   class { 'my_class': }
+}
+
+node /^pasture-app/ {
+  include role::pasture_app
+}
+
+node /^pasture-db/ {
+  include role::pasture_db
+}
+
+$ puppet job run --nodes pasture-db.puppet.vm
+$ puppet job run --nodes pasture-app-small.puppet.vm,pasture-app-large.puppet.vm
+```
+
