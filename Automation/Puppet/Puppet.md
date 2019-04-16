@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T08:02:59.690Z
+date: 2019-04-16T08:46:44.277Z
 tags: 
 ---
 
@@ -345,4 +345,18 @@ $ puppet parser validate pasture/manifests/init.pp
 $ puppet agent -t
 
 $ curl 'node_name:4567/api/v1/cowsay?message=Hello!'
+```
+
+# Variables
+
+A variable name is prefixed with a `$` (dollar sign), and a value is assigned with the `=` operator. Assigning a short string to a variable, for example, looks like this:
+
+`$my_variable = 'look, a string!'`
+
+Once you have defined a variable, you can use it anywhere in your manifest where you want to use the assigned value. Note that variables are parse-order dependent, which means that a variable must be defined before it can be used. Trying to use an undefined variable will result in a special `undef` value. Though this may result in explicit errors, in some cases it will still lead to a valid catalog with unexpected contents.
+
+Technically, Puppet variables are actually *constants* from the perspective of the Puppet parser as it parses your Puppet code to create a catalog. Once a variable is assigned, the value is fixed and cannot be changed. The *variability*, here, refers to the fact that a variable can have a different value set across different Puppet runs or across different systems in your infrastructure.
+
+```
+$ vi pasture/manifests/init.pp
 ```
