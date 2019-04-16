@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T13:04:07.665Z
+date: 2019-04-16T13:07:09.919Z
 tags: 
 ---
 
@@ -620,9 +620,9 @@ node 'node_name' {
     default_character => 'cow',
   }
 }
-
-$ puppet agent -t
 ```
+
+`$ puppet agent -t`
 
 # Conditional statements
 
@@ -817,9 +817,9 @@ $ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
 node 'db_node' {
   include pasture::db
 }
-
-$ puppet job run --nodes db_node
 ```
+
+`$ puppet job run --nodes db_node`
 
 Now that this database server is set up, let's add a parameter to our main pasture class to specify a database URI and pass this through to the configuration file.
 
@@ -932,8 +932,9 @@ A *role* is a class that combines one or more profiles to define the desired sta
 
 Using roles and profiles is a design pattern, not something written into the Puppet source code. As far as the Puppet parser is concerned, the classes that define your roles and profiles are no different than any other class.
 
+`$ mkdir -p profile/manifests/pasture`
+
 ```bash
-$ mkdir -p profile/manifests/pasture
 $ vi profile/manifests/pasture/app.pp
 ---
 class profile::pasture::app {
@@ -971,3 +972,11 @@ class profile::base::motd {
   include motd
 }
 ```
+
+## Writing roles
+
+A role combines profiles to define the full set of components you want Puppet to manage on a system. A role should consist of only `include` statements to pull in the list of profile classes that make up the role. A role should not directly declare non-profile classes or individual resources.
+
+A role's name should be a simple description of the business purpose of the system it describes. Specific implementation details related to the technology stack are left to the profiles. For example, `role::myapp_webserver` and `role::myapp_database` are appropriate names for role classes, while `role::postgres_db` or `role::apache_server` are not.
+
+`$ mkdir -p role/manifests`
