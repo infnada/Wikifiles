@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T07:19:37.464Z
+date: 2019-04-16T07:28:40.567Z
 tags: 
 ---
 
@@ -119,3 +119,38 @@ $ puppet config print modulepath
 ```
 
 This directory includes modules specific to the production environment. (The second directory contains modules used across all environments, and the third is modules that PE uses to configure itself).
+
+In a real production environment, however, you would likely want to keep your Puppet code in a version control repository such as Git and use Puppet's code manager tool to deploy it to your master
+
+### Example module
+
+You might be wondering why we're calling it init.pp instead of cowsay.pp. Most modules contain a main class like this whose name corresponds with the name of the module itself. This main class is always kept in a manifest with the special name init.pp.
+
+```
+$ cd /etc/puppetlabs/code/environments/production/modules
+$ mkdir -p cowsay/manifests
+$ vi cowsay/manifests/init.pp
+---
+class cowsay {
+  package { 'cowsay':
+    ensure   => present,
+    provider => 'gem',
+  }
+}
+
+$ puppet parser validate cowsay/manifests/init.pp
+```
+
+Apply the class to a node:
+
+```
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'node_name' {
+  include cowsay
+}
+```
+
+Before applying any changes to your system, it's always a good idea to use the --noop flag to do a practice run of the Puppet agent. This will compile the catalog and notify you of the changes that Puppet would have made without actually applying any of those changes to your system.
+
+`$ puppet agent -t --noop`
