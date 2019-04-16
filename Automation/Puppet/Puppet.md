@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T12:35:10.686Z
+date: 2019-04-16T12:38:52.938Z
 tags: 
 ---
 
@@ -820,3 +820,63 @@ node 'db_node' {
 
 $ puppet job run --nodes db_node
 ```
+
+Now that this database server is set up, let's add a parameter to our main pasture class to specify a database URI and pass this through to the configuration file.
+
+Add a `$db` parameter with a default value of `'none'`. You'll see why we use `'none'` a little later. Add this `$db` variable to the `$pasture_config_hash` so it will be passed through to the template that defines the application's configuration file. When you've made these two additions, your class should look like the example below.
+
+```bash
+$ vi pasture/manifests/init.pp
+---
+class pasture (
+  $port                = '80',
+  $default_character   = 'sheep',
+  $default_message     = '',
+  $pasture_config_file = '/etc/pasture_config.yaml',
+  $sinatra_server      = 'webrick',
+  $db                  = 'none',
+){
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+    before   => File[$pasture_config_file],
+  }
+
+  $pasture_config_hash = {
+    'port'              => $port,
+    'default_character' => $default_character,
+    'default_message'   => $default_message,
+    'sinatra_server'    => $sinatra_server,
+    'db'                => $db,
+  }
+
+  file { $pasture_config_file:
+    content => epp('pasture/pasture_config.yaml.epp', $pasture_config_hash),
+    notify  => Service['pasture'],
+  }
+
+  $pasture_service_hash = {
+    'pasture_config_file' => $pasture_config_file,
+  }
+
+  file { '/etc/systemd/system/pasture.service':
+    content => epp('pasture/pasture.service.epp', $pasture_service_hash),
+    notify  => Service['pasture'],
+  }
+
+  service { 'pasture':
+    ensure    => running,
+  }
+
+  if ($sinatra_server == 'thin') or ($sinatra_server == 'mongrel')  {
+    package { $sinatra_server:
+      provider => 'gem',
+      notify   => Service['pasture'],
+    }
+  }
+
+}
+```
+
+Next, edit the `pasture_config.yaml.epp` template. We'll use a conditional statement to only include the `:db:` setting if there is a value other than `none` set for the `$db` variable.
