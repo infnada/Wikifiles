@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T12:47:45.827Z
+date: 2019-04-16T13:04:07.665Z
 tags: 
 ---
 
@@ -918,4 +918,56 @@ $ puppet job run --nodes node_prod
 $ curl -X POST 'node_prod/api/v1/cowsay/sayings?message=Hello!'
 $ curl 'node_prod/api/v1/cowsay/sayings'
 $ curl 'node_prod/api/v1/cowsay/sayings/1'
+```
+
+# Roles and Profiles
+
+As your Puppetized infrastructure grows in scale and complexity, you'll need to manage more and more kinds of systems. Defining all the classes and parameters for these systems directly in your `site.pp` manifest doesn't scale well. The `roles and profiles` pattern gives you a consistent and modular way to define how the components provided in your Puppet modules come together to define each different kind of system you need to manage.
+
+A *profile* is a class that declares one or more related component modules and sets their parameters as needed. The set of profiles on a system defines and configures the technology stack it needs to fulfill its business role.
+
+A *role* is a class that combines one or more profiles to define the desired state for a whole system. A role should correspond to the business purpose of a server. A role itself should **only** compose profiles and set their parameters—it should not have any parameters itself.
+
+## Writing profiles
+
+Using roles and profiles is a design pattern, not something written into the Puppet source code. As far as the Puppet parser is concerned, the classes that define your roles and profiles are no different than any other class.
+
+```bash
+$ mkdir -p profile/manifests/pasture
+$ vi profile/manifests/pasture/app.pp
+---
+class profile::pasture::app {
+  if $facts['fqdn'] =~ 'large' {
+    $default_character = 'elephant'
+    $db                = 'postgres://pasture:m00m00@pasture-db.puppet.vm/pasture'
+  } elsif $facts['fqdn'] =~ 'small' {
+    $default_character = 'cow'
+    $db                = 'none'
+  } else {
+    fail("The ${facts['fqdn']} node name must match 'large' or 'small'.")
+  }
+  class { 'pasture':
+    default_message   => 'Hello Puppet!',
+    sinatra_server    => 'thin',
+    default_character => $default_character,
+    db                => $db,
+  }
+}
+
+$ vi profile/manifests/pasture/db.pp
+---
+class profile::pasture::db {
+  include pasture::db
+}
+```
+
+While these profiles define the configuration of components directly related to the Pasture application, you'll typically need to manage aspects of these systems that aren't directly related to their business role. A profile module may include profile classes to manage things like user accounts, DHCP configuration, firewall rules, and NTP. Because these classes are applied across many or all of the systems in your infrastructure, the convention is to keep them in a `base` subdirectory. To give an example of a base profile, we'll create a `profile::base::motd` profile class to wrap the `motd` component class you created earlier.
+
+```bash
+$ mkdir profile/manifests/base
+$ vi profile/manifests/base/motd.pp
+---
+class profile::base::motd {
+  include motd
+}
 ```
