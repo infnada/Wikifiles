@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T07:28:40.567Z
+date: 2019-04-16T07:35:52.053Z
 tags: 
 ---
 
@@ -154,3 +154,46 @@ node 'node_name' {
 Before applying any changes to your system, it's always a good idea to use the --noop flag to do a practice run of the Puppet agent. This will compile the catalog and notify you of the changes that Puppet would have made without actually applying any of those changes to your system.
 
 `$ puppet agent -t --noop`
+
+If your dry run looks good, go ahead and run the Puppet agent again without the --noop flag.
+
+`$ puppet agent -t`
+
+Now you can try out your newly installed cowsay command:
+
+`$ cowsay Puppet is awesome!`
+
+### Composed classes and class scope
+
+A module often includes multiple components that work together to serve a single function.
+
+```
+$ vi cowsay/manifests/fortune.pp
+---
+class cowsay::fortune {
+  package { 'fortune-mod':
+    ensure => present,
+  }
+}
+
+$ puppet parser validate cowsay/manifests/fortune.pp
+```
+
+We could use another include statement in the `site.pp` manifest to classify `node_name` with this `cowsay::fortune` class. In general, however, it's best to keep your classification as simple as possible.
+
+In this case, use a class declaration to pull the `cowsay::fortune` class into our main `cowsay` class.
+
+```
+$ vi cowsay/manifests/init.pp
+---
+class cowsay {
+  package { 'cowsay':
+    ensure   => present,
+    provider => 'gem',
+  }
+  include cowsay::fortune
+}
+
+$ puppet parser validate cowsay/manifests/init.pp
+```
+
