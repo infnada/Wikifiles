@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T13:18:57.083Z
+date: 2019-04-16T13:39:46.651Z
 tags: 
 ---
 
@@ -1018,5 +1018,10 @@ node /^pasture-db/ {
 
 $ puppet job run --nodes pasture-db.puppet.vm
 $ puppet job run --nodes pasture-app-small.puppet.vm,pasture-app-large.puppet.vm
+
+$ curl 'pasture-app-small.puppet.vm/api/v1/cowsay?message="hello"'
+$ curl 'pasture-app-large.puppet.vm/api/v1/cowsay?message="HELLO!"'
+
+$ curl 'pasture-app-small.puppet.vm/api/v1/cowsay/sayings' (error because small app has no db)
 ```
 
