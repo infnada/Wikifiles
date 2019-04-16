@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T10:56:32.057Z
+date: 2019-04-16T12:25:24.145Z
 tags: 
 ---
 
@@ -758,4 +758,13 @@ node 'node_prod' {
     sinatra_server => 'thin',
   }
 }
+```
+
+# Puppet Job
+
+```bash
+$ puppet access login --lifetime 1d
+$ puppet job run --nodes node_dev,node_prod
+$ curl 'node_dev.puppet.vm/api/v1/cowsay?message=Hello!'
+$ curl 'node_prod.puppet.vm/api/v1/cowsay?message=Hello!'
 ```
