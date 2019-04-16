@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T09:53:22.551Z
+date: 2019-04-16T10:29:52.659Z
 tags: 
 ---
 
@@ -622,4 +622,140 @@ node 'pasture.puppet.vm' {
 }
 
 $ puppet agent -t
+```
+
+# Conditional statements
+
+```bash
+if $::osfamily == 'RedHat' {
+  ...
+  $apache_name = 'httpd'
+  ...
+} elsif $::osfamily == 'Debian' {
+  ...
+  $apache_name = 'apache2'
+  ...
+}
+
+package { 'httpd':
+  ensure => $ensure,
+  name   => $::apache::apache_name,
+  notify => Class['Apache::Service'],
+}
+```
+
+Puppet supports a few different ways of implementing conditional logic:
+
+- if statements,
+- unless statements,
+- case statements, and
+- selectors.
+
+First, add a `$sinatra_server` parameter with a default value of webrick.
+
+Next add the `$sinatra_server` variable to the $pasture_config_hash so that it can be passed through to the configuration file template.
+
+The beginning of your class should look like the following example:
+
+```bash
+pasture/manifests/init.pp
+---
+class pasture (
+  $port                = '80',
+  $default_character   = 'sheep',
+  $default_message     = '',
+  $pasture_config_file = '/etc/pasture_config.yaml',
+  $sinatra_server      = 'webrick',
+){
+
+$pasture_config_hash = {
+  'port'              => $port,
+  'default_character' => $default_character,
+  'default_message'   => $default_message,
+  'sinatra_server'    => $sinatra_server,
+}
+
+$ vi pasture/templates/pasture_config.yaml.epp
+---
+<%- | $port,
+      $default_character,
+      $default_message,
+      $sinatra_server,
+| -%>
+# This file is managed by Puppet. Please do not make manual changes.
+---
+:default_character: <%= $default_character %>
+:default_message:   <%= $default_message %>
+:sinatra_settings:
+  :port:   <%= $port %>
+  :server: <%= $sinatra_server %>
+```
+
+Now that your module is able to manage this setting, add a conditional statement to manage the required packages for the Thin and Mongrel webservers.
+
+```bash
+$ vi pasture/manifests/init.pp
+---
+class pasture (
+  $port                = '80',
+  $default_character   = 'sheep',
+  $default_message     = '',
+  $pasture_config_file = '/etc/pasture_config.yaml',
+  $sinatra_server      = 'webrick',
+){
+
+  package { 'pasture':
+    ensure   => present,
+    provider => 'gem',
+    before   => File[$pasture_config_file],
+  }
+
+  $pasture_config_hash = {
+    'port'              => $port,
+    'default_character' => $default_character,
+    'default_message'   => $default_message,
+    'sinatra_server'    => $sinatra_server,
+  }
+
+  file { $pasture_config_file:
+    content => epp('pasture/pasture_config.yaml.epp', $pasture_config_hash),
+    notify  => Service['pasture'],
+  }
+
+  $pasture_service_hash = {
+    'pasture_config_file' => $pasture_config_file,
+  }
+
+  file { '/etc/systemd/system/pasture.service':
+    content => epp('pasture/pasture.service.epp', $pasture_service_hash),
+    notify  => Service['pasture'],
+  }
+
+  service { 'pasture':
+    ensure    => running,
+  }
+
+  if ($sinatra_server == 'thin') or ($sinatra_server == 'mongrel')  {
+    package { $sinatra_server:
+      provider => 'gem',
+      notify   => Service['pasture'],
+    }
+  }
+
+}
+```
+
+With these changes to your class, you can easily accommodate different servers for different agent nodes in your infrastructure. For example, you may want to use the default WEBrick server on a development system and the Thin server on for production.
+
+```bash
+$ vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+---
+node 'node_dev' {
+  include pasture
+}
+node 'node_prod' {
+  class { 'pasture':
+    sinatra_server => 'thin',
+  }
+}
 ```
