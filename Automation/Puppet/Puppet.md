@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T09:03:30.678Z
+date: 2019-04-16T09:11:41.028Z
 tags: 
 ---
 
@@ -465,6 +465,11 @@ class pasture {
     ensure    => running,
   }
 }
+
+$ puppet parser validate pasture/manifests/init.pp
+$ puppet agent -t
+
+$ curl 'pasture.puppet.vm/api/v1/cowsay?message=Hello!'
 ```
 
 The `<%= ... %>` tags we use to insert our variables into the file are called expression-printing tags. These tags insert the content of a Puppet expression, in this case the string values assigned to our variables.
