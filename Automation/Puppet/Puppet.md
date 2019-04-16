@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-15T15:14:27.889Z
+date: 2019-04-16T07:19:37.464Z
 tags: 
 ---
 
@@ -63,11 +63,15 @@ $2 puppetserver ca sign --certname some_cert_name
 $1 puppet agent -t
 ```
 
-# The site.pp manifest
+# Manifests
+
+At its simplest, a Puppet manifest is Puppet code saved to a file with the .pp extension. This code is written in the Puppet domain specific language (DSL).
+
+## The site.pp manifest
 
 When a Puppet agent contacts the Puppet master, the master checks for any node definitions in the `site.pp` manifest that match the agent system's name. In the Puppet world, the term "node" is used to mean any system or device in your infrastructure, so a node definition defines how Puppet should manage a given system.
 
-## Example basic node declaration
+### Example basic node declaration
 
 Normally you would include one or more class declarations in this node block. A class defines a group of related resources, allowing them to be declared as a single unit. Using classes in your node definitions keeps them simple and well organized and encourages the reuse of code.
 
@@ -88,3 +92,30 @@ Notice: Hello Puppet!
 Notice: /Stage[main]/Main/Node[node_name]/Notify[Hello Puppet!]/message: defined 'message' as 'Hello Puppet!'
 Notice: Applied catalog in 0.45 seconds
 ```
+
+### Example simple manifest
+```
+$ vi /tmp/hello.pp
+---
+notify { 'Hello Puppet!': }
+
+$ puppet apply /tmp/hello.pp 
+```
+
+## Clases and modules
+
+A class is named block of Puppet code. Defining a class combines a group of resources into single reusable and configurable unit. Once defined, a class can then be declared to tell Puppet to apply the resources it contains.
+
+A class should bring together a set of resources that manage one logical component of a system. For example, a class written to manage a MS SQL Server might include resources to manage the package, configuration files, and service for the MS SQL Server instance.
+
+A module is a directory structure that lets Puppet keep track of where to find the manifests that contain your classes. A module also contains other data a class might rely on, such as the templates for configuration files. When you apply a class to a node, the Puppet master checks in a list of directories called a *modulepath* for a module directory matching the class name. The master then looks in that module's `manifests` subdirectory to find the manifest containing the class definition.
+
+To see what your configured modulepath is, run the following command:
+
+```
+$ puppet config print modulepath
+
+/etc/puppetlabs/code/environments/production/modules:/etc/puppetlabs/code/modules:/opt/puppetlabs/puppet/modules
+```
+
+This directory includes modules specific to the production environment. (The second directory contains modules used across all environments, and the third is modules that PE uses to configure itself).
