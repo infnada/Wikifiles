@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-16T12:47:02.643Z
+date: 2019-04-16T12:47:45.827Z
 tags: 
 ---
 
