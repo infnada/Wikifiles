@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T09:51:04.413Z
+date: 2019-04-17T09:51:50.896Z
 tags: 
 ---
 
@@ -1357,3 +1357,7 @@ Change `puppet_enterprise::profile::master` class:
 - r10k_remote => http://SERVER/learning/control-repo.git
 - r10k_private_key => /etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa
 - file_sync_enabled => true
+
+Trigger a puppet agent run to enforce these configuration changes on the master.
+
+`$ puppet agent -t`
