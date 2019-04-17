@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T07:32:18.827Z
+date: 2019-04-17T07:51:11.352Z
 tags: 
 ---
 
@@ -1314,3 +1314,17 @@ $ cp manifests/site.pp /root/control-repo/manifests/site.pp
 $ cp hiera.yaml /root/control-repo/hiera.yaml
 $ cp -r data /root/control-repo/data
 ```
+
+## Init repo
+
+```bash
+$ cd /root/control-repo
+$ git init
+$ git add *
+$ [git status]
+$ git commit -m Init
+```
+
+When you initialize a new repository, Git creates a default main branch called `master`. The convention for Puppet, however, is to call its main branch `production`. This way, the branch name matches up with the `production` code environment on your Puppet master.
+
+`$ git branch -m master production`
