@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T09:59:29.476Z
+date: 2019-04-17T10:14:41.502Z
 tags: 
 ---
 
@@ -1378,3 +1378,36 @@ $ puppet code deploy production --wait
 ```
 
 When the deploy process completes, your production code directory at `/etc/puppetlabs/code/environments/production` will by synchronized with your control repository.
+
+## Control repository development workflow
+
+Now that Puppet is running with code deployed from your control repository, let's walk through the process of introducing changes to your a local copy of the repository, creating a PR to merge those changes to your upstream repository, and finally deploying those changes to production.
+
+```bash
+$ cd ~/control-repo
+
+# Check for existing changes
+$ git status
+
+# Get the last repository changes
+$ git pull upstream production
+
+# Create new branch
+$ git checkout -b beauvine_default_message
+
+# Here, edit the value of the default_message variable to read 'Hello control repository!'.
+$ vi data/domain/beauvine.vm.yaml
+
+# Check status of repository
+$ git status
+
+$ git add data/domain/beauvine.vm.yaml
+$ git commit -m "some comment message"
+
+# Push the changes
+$ git push upstream beauvine_default_message
+
+# Create and merge a pull request
+
+$ puppet code deploy production --wait
+```
