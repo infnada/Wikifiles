@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T07:15:54.446Z
+date: 2019-04-17T07:32:18.827Z
 tags: 
 ---
 
@@ -1288,4 +1288,29 @@ class role::pasture_app {
 ```bash
 $ puppet job run --nodes pasture-app.beauvine.vm
 $ ssh inavarro@pasture-app.beauvine.vm
+```
+
+# Control Repository
+
+For the most part, a control repository should include the same contents you see currently in the `production` directory. However, there is one notable difference: rather than a `modules` subdirectory a control repository generally has distinct subdirectory called `site`. Your site directory should contains only the site-specific modules that you (or your team) have written specifically to manage your infrastructure, as these are the modules whose code should be managed through your source control process.
+
+```bash
+$ mkdir -p /root/control-repo/site
+$ cd /etc/puppetlabs/code/environments/production/modules
+$ cp -r {cowsay,pasture,motd,user_accounts,role,profile} /root/control-repo/site/
+$ cd ..
+```
+
+Here, you need to make one more change to ensure that Puppet can actually find the modules you just copied into the `site` directory. Remember, Puppet can only find modules included in its `modulepath`. By default, this includes the `modules` directory, but not the `site` directory. For Puppet to find these site modules, this directory must be added to the `modulepath`. To do this, we'll use the `environment.conf` configuration file to override the Puppet master's default `modulepath` setting.
+
+```
+$ cp environment.conf /root/control-repo/environment.conf
+$ vi /root/control-repo/environment.conf
+---
+modulepath = site:modules:$basemodulepath
+
+$ mkdir /root/control-repo/manifests
+$ cp manifests/site.pp /root/control-repo/manifests/site.pp
+$ cp hiera.yaml /root/control-repo/hiera.yaml
+$ cp -r data /root/control-repo/data
 ```
