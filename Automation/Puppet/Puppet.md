@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T09:51:50.896Z
+date: 2019-04-17T09:59:29.476Z
 tags: 
 ---
 
@@ -762,6 +762,8 @@ node 'node_prod' {
 
 # Puppet Job
 
+Make use the user is in `Operators` role.
+
 ```bash
 $ puppet access login --lifetime 1d
 $ puppet job run --nodes node_dev,node_prod
@@ -1353,11 +1355,26 @@ When prompted for a passphrase, hit enter twice to create a key without a passph
 Add the ssh key to your repository.
 
 Change `puppet_enterprise::profile::master` class:
-- code_manager_auto_configure => true
-- r10k_remote => http://SERVER/learning/control-repo.git
-- r10k_private_key => /etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa
-- file_sync_enabled => true
+- `code_manager_auto_configure` => `true`
+- `r10k_remote` => `http://SERVER/learning/control-repo.git`
+- `r10k_private_key` => `/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa`
+- `file_sync_enabled` => `true`
 
 Trigger a puppet agent run to enforce these configuration changes on the master.
 
 `$ puppet agent -t`
+
+## Deploying Puppet code
+
+With Code Manager configured and your deploy key set up, the Puppet master has read access to the code in your repository. Before this code in your control repository is actually used, however, it will need to be deployed to a code environment on the master.
+
+There are some options for further automation of this process. For example, you can configure a webhook to automatically trigger a deployment whenever new code is merged to the upstream repository. In this case, we'll keep things simple and hands-on by using the `puppet code deploy` command to manually trigger a code deployment.
+
+Make sure the user is in `Code Deployers` role.
+
+```bash
+$ puppet access login --lifetime 1d
+$ puppet code deploy production --wait
+```
+
+When the deploy process completes, your production code directory at `/etc/puppetlabs/code/environments/production` will by synchronized with your control repository.
