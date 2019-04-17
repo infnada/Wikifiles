@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T10:14:41.502Z
+date: 2019-04-17T10:31:28.074Z
 tags: 
 ---
 
@@ -1410,4 +1410,36 @@ $ git push upstream beauvine_default_message
 # Create and merge a pull request
 
 $ puppet code deploy production --wait
+```
+
+# Puppetfile
+
+A Puppetfile provides a more efficient solution for managing external module dependencies. It lets you use a single file to specify the desired version and source for each external module. Puppet's Code Manager installs the modules specified by your Puppetfile into your environment's modules directory during the code deployment process.
+
+This way, you can add, remove, and update external modules by changing one or two lines of code in your Puppetfile.
+
+Because the database-backed version of the Pasture application depends on the `puppetlabs-postgresql` module, you will need to include that module in your Puppetfile before Puppet can manage the application.
+
+```bash
+$ cd ~/control-repo
+$ git status
+$ git checkout production
+$ git pull upstream production
+$ git checkout -b puppetfile
+$ vi Puppetfile
+---
+mod "puppetlabs/postgresql", '5.12.1'
+mod "puppetlabs/apt", '6.3.0'
+mod "puppetlabs/translate", '1.1.0'
+mod "puppetlabs/concat", '5.3.0'
+mod "puppetlabs/stdlib", '5.2.0'
+
+$ git add Puppetfile
+$ git commit -m "Add Puppetfile"
+$ git push upstream puppetfile
+
+# Create and merge a pull request
+
+$ puppet code deploy production --wait
+$ puppet module list --tree --modulepath /etc/puppetlabs/code/environments/production/modules
 ```
