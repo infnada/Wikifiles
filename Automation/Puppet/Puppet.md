@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T08:01:32.583Z
+date: 2019-04-17T09:51:04.413Z
 tags: 
 ---
 
@@ -1351,3 +1351,9 @@ When prompted for a passphrase, hit enter twice to create a key without a passph
 `$ chown -R pe-puppet:pe-puppet /etc/puppetlabs/puppetserver/ssh`
 
 Add the ssh key to your repository.
+
+Change `puppet_enterprise::profile::master` class:
+- code_manager_auto_configure => true
+- r10k_remote => http://SERVER/learning/control-repo.git
+- r10k_private_key => /etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa
+- file_sync_enabled => true
