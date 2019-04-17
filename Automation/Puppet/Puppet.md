@@ -2,7 +2,7 @@
 title: Puppet
 description: Puppet
 published: true
-date: 2019-04-17T07:51:11.352Z
+date: 2019-04-17T08:01:32.583Z
 tags: 
 ---
 
@@ -1327,4 +1327,27 @@ $ git commit -m Init
 
 When you initialize a new repository, Git creates a default main branch called `master`. The convention for Puppet, however, is to call its main branch `production`. This way, the branch name matches up with the `production` code environment on your Puppet master.
 
-`$ git branch -m master production`
+```bash
+$ git branch -m master production
+$ git remote add upstream http://SERVER/learning/control-repo.git
+$ [git remote -v]
+$ git push upstream production
+```
+
+## Code Manager deploy key
+
+The Code Manager tool lets you automate the deployment of Puppet code to your master from a control repository.
+
+```bash
+$ mkdir /etc/puppetlabs/puppetserver/ssh
+$ ssh-keygen -t rsa -b 4096 -C "learning@puppet.vm"
+```
+When prompted, save the key to the following file:
+
+`/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa`
+
+When prompted for a passphrase, hit enter twice to create a key without a passphrase.
+
+`$ chown -R pe-puppet:pe-puppet /etc/puppetlabs/puppetserver/ssh`
+
+Add the ssh key to your repository.
